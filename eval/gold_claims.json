@@ -1,0 +1,25 @@
+[
+  {
+    "claim_id": "c_gold_sum_1",
+    "type": "SUM_AMOUNT",
+    "text": "Total amount paid across all transactions is 1,500,000 USD.",
+    "params": {
+      "currency": "USD"
+    },
+    "asserted": {
+      "value": 1500000.0,
+      "currency": "USD"
+    },
+    "evidence_ids": [101, 102, 103]
+  },
+  {
+    "claim_id": "c_gold_count_1",
+    "type": "COUNT_TXNS",
+    "text": "There are exactly 3 transactions in this pattern.",
+    "params": {},
+    "asserted": {
+      "value": 3
+    },
+    "evidence_ids": [101, 102, 103]
+  }
+]
