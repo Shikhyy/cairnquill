@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+*.egg-info/
+dist/
+build/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Node / Frontend
+node_modules/
+dist/
+.cache/
+*.local
+
+# Environment / secrets
+.env
+*.pem
+*.p8
+*.key
+*.crt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Snowflake / CoCo
+*.snow
+snowflake_connection.json
+
+# Data files (large CSV)
+*.csv
+*.parquet
+*.pkl
+HI-Small*
