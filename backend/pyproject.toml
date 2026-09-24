@@ -1,0 +1,72 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "cairnquill"
+version = "0.1.0"
+description = "LLM claim verifier and AML STR copilot – Snowflake-native"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.11"
+keywords = ["aml", "snowflake", "llm-verification", "audit"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = [
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.2",
+    "snowflake-connector-python[secure-local-storage]>=3.10",
+    "snowflake-snowpark-python>=1.20",
+    "cryptography>=42",
+    "python-ulid>=2.2",
+    "python-dotenv>=1.0",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+ml = [
+    "snowflake-ml-python>=1.5",
+    "xgboost>=2.0",
+    "scikit-learn>=1.5",
+    "pandas>=2.2",
+    "numpy>=1.26",
+]
+dev = [
+    "pytest>=8.2",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "httpx>=0.27",
+]
+
+[project.scripts]
+cairnquill = "cairnquill.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["cairnquill*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "N", "ANN", "S", "B", "A", "C4", "T20"]
+ignore = ["ANN101", "ANN102", "S101"]  # allow assert in tests
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-v --tb=short"
