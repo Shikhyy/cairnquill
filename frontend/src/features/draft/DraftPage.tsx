@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { useQuery, useMutation } from '@tanstack/react-query'
-import { api, VerifyResponse, Claim } from '@/lib/api'
-import { Button, ClaimCard, Chip, Skeleton } from '@/components/ui'
+import {  useMutation } from '@tanstack/react-query'
+import { api, } from '@/lib/api'
+import { Button, ClaimCard, Chip } from '@/components/ui'
 import { CheckCircle2, AlertTriangle, ArrowRight, RefreshCcw } from 'lucide-react'
 import { useToastStore } from '@/lib/toast'
 
@@ -63,7 +63,7 @@ export default function DraftPage() {
 
   if (!draftMutation.data) return null
 
-  const { draft_id, blocked, verdicts, omissions, claims, status } = draftMutation.data
+  const { draft_id, blocked, verdicts, omissions, claims,} = draftMutation.data
   const failedCount = verdicts.filter(v => v.verdict === 'CONTRADICTED' || v.verdict === 'UNSUPPORTED').length
   const verifiedCount = verdicts.filter(v => v.verdict === 'VERIFIED').length
 

@@ -2,8 +2,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { useState } from 'react'
 import { api } from '@/lib/api'
-import { Button, Chip, Skeleton, SealBadge } from '@/components/ui'
-import { ShieldCheck, MessageSquareX } from 'lucide-react'
+import { Button, Chip, Skeleton } from '@/components/ui'
+import { ShieldCheck } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
 import { useToastStore } from '@/lib/toast'
 
@@ -22,7 +22,7 @@ export default function ReviewPage() {
 
   const approveMutation = useMutation({
     mutationFn: () => api.approveCase(caseId!),
-    onSuccess: (res) => {
+    onSuccess: () => {
       addToast('Case approved and sealed', 'success')
       navigate(`/filings`)
     },
@@ -57,7 +57,7 @@ export default function ReviewPage() {
             <div><span className="text-ink-2 block">Case ID</span><span className="font-mono">{c.CASE_ID}</span></div>
             <div><span className="text-ink-2 block">Account</span><span className="font-mono">{c.ACCOUNT_KEY}</span></div>
             <div><span className="text-ink-2 block">Maker</span>{c.MAKER}</div>
-            <div><span className="text-ink-2 block">Submitted</span>{new Date(c.UPDATED_TS || c.CREATED_TS).toLocaleString()}</div>
+            <div><span className="text-ink-2 block">Submitted</span>{new Date(c.CREATED_TS).toLocaleString()}</div>
           </div>
         </div>
 

@@ -6,7 +6,7 @@ import { ToastContainer } from '../components/ui/Toast'
 
 export function Layout() {
   const { pathname } = useLocation()
-  const { role, user, setRole, theme, toggleTheme, demoMode, setDemoMode } = useAppStore()
+  const { role, user, setRole, theme, toggleTheme, demoMode,  } = useAppStore()
 
   return (
     <div className="min-h-screen flex flex-col">

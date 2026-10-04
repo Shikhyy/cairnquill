@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import { api, Alert } from '@/lib/api'
-import { Button, Chip, SlaRing, Skeleton } from '@/components/ui'
+import { Button,  SlaRing, Skeleton } from '@/components/ui'
 import { ArrowRight, AlertOctagon } from 'lucide-react'
 import { useToastStore } from '@/lib/toast'
 
