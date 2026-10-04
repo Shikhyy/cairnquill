@@ -100,7 +100,7 @@ export interface Alert {
   ALERT_ID: number
   ACCOUNT_KEY: string
   SCORE: number
-  MODEL_VERSION: string
+  MODEL_VERSION?: string
   CREATED_TS: string
   SLA_DUE: string
   STATUS: string
@@ -167,6 +167,8 @@ export interface Filing {
   CASE_ID: string
   DRAFT_ID: string
   SEAL_SHA: string
+  EVIDENCE_SHA?: string
+  PREV_SEAL_SHA?: string | null
   MAKER: string
   APPROVER: string
   APPROVED_TS: string

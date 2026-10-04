@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {  useMutation } from '@tanstack/react-query'
-import { api, } from '@/lib/api'
+import { api, Claim, VerdictItem } from '@/lib/api'
 import { Button, ClaimCard, Chip } from '@/components/ui'
 import { CheckCircle2, AlertTriangle, ArrowRight, RefreshCcw } from 'lucide-react'
 import { useToastStore } from '@/lib/toast'
@@ -111,11 +111,11 @@ export default function DraftPage() {
   if (!effectiveDraft) return null
 
   const { draft_id, blocked, verdicts, omissions, claims } = effectiveDraft as any
-  const failedCount = verdicts.filter(v => v.verdict === 'CONTRADICTED' || v.verdict === 'UNSUPPORTED').length
-  const verifiedCount = verdicts.filter(v => v.verdict === 'VERIFIED').length
+  const failedCount = verdicts.filter((v: VerdictItem) => v.verdict === 'CONTRADICTED' || v.verdict === 'UNSUPPORTED').length
+  const verifiedCount = verdicts.filter((v: VerdictItem) => v.verdict === 'VERIFIED').length
 
   const getClaim = (claimId: string) => {
-    return claims?.find(c => c.claim_id === claimId) || {
+    return claims?.find((c: Claim) => c.claim_id === claimId) || {
       claim_id: claimId,
       type: 'SUM_AMOUNT' as any,
       text: `Unknown Claim ${claimId}`,
@@ -143,7 +143,7 @@ export default function DraftPage() {
         <div className="col-span-2 space-y-4">
           <h2 className="text-headline">Claims ({verdicts.length})</h2>
           <div className="space-y-3">
-            {verdicts.map(v => (
+            {verdicts.map((v: VerdictItem) => (
               <ClaimCard
                 key={v.claim_id}
                 claim={getClaim(v.claim_id)}
@@ -178,7 +178,7 @@ export default function DraftPage() {
               <div className="mb-6 p-3 bg-surface-2/50 rounded-md border border-hairline">
                 <h3 className="text-xs font-semibold mb-2 flex items-center gap-1"><AlertTriangle size={12} className="text-contradicted"/> Missing Elements</h3>
                 <ul className="text-xs text-ink-2 space-y-1 list-disc pl-4">
-                  {omissions.map(o => <li key={o} className="font-mono">{o}</li>)}
+                  {omissions.map((o: string) => <li key={o} className="font-mono">{o}</li>)}
                 </ul>
               </div>
             )}

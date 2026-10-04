@@ -34,12 +34,12 @@ const MOCK_CASE_DATA = {
   ],
   kyc: {
     ACCOUNT_KEY: 'ACC_98231_CORP',
-    ENTITY_NAME: 'Apex Commodities Global Ltd',
-    INCORPORATION_JURISDICTION: 'BVI',
-    RISK_CATEGORY: 'HIGH',
+    CUSTOMER_NAME_SYNTH: 'Apex Commodities Global Ltd',
+    OCCUPATION: 'Commodities Trading Entity',
     DECLARED_MONTHLY_INCOME: 50000.00,
     INCOME_CCY: 'USD',
-    ACTUAL_MONTHLY_VOLUME: 4821400.00,
+    BRANCH: 'Singapore Central',
+    RISK_RATING: 'HIGH',
   },
   synthetic_data: true,
 }

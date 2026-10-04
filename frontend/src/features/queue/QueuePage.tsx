@@ -7,10 +7,10 @@ import { ArrowRight, AlertOctagon, ShieldAlert, Sparkles, Filter } from 'lucide-
 import { useToastStore } from '@/lib/toast'
 
 const MOCK_ALERTS: Alert[] = [
-  { ALERT_ID: 101, ACCOUNT_KEY: 'ACC_98231_CORP', SCORE: 0.96, STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 2).toISOString(), DAYS_REMAINING: 2 },
-  { ALERT_ID: 102, ACCOUNT_KEY: 'ACC_14209_SHELL', SCORE: 0.91, STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 3).toISOString(), DAYS_REMAINING: 3 },
-  { ALERT_ID: 103, ACCOUNT_KEY: 'ACC_47182_HOLD', SCORE: 0.84, STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 4).toISOString(), DAYS_REMAINING: 4 },
-  { ALERT_ID: 104, ACCOUNT_KEY: 'ACC_61044_OFFSHORE', SCORE: 0.78, STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 6).toISOString(), DAYS_REMAINING: 6 },
+  { ALERT_ID: 101, ACCOUNT_KEY: 'ACC_98231_CORP', SCORE: 0.96, MODEL_VERSION: 'CQ_DETECTOR_v1', STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 2).toISOString(), DAYS_REMAINING: 2 },
+  { ALERT_ID: 102, ACCOUNT_KEY: 'ACC_14209_SHELL', SCORE: 0.91, MODEL_VERSION: 'CQ_DETECTOR_v1', STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 3).toISOString(), DAYS_REMAINING: 3 },
+  { ALERT_ID: 103, ACCOUNT_KEY: 'ACC_47182_HOLD', SCORE: 0.84, MODEL_VERSION: 'CQ_DETECTOR_v1', STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 4).toISOString(), DAYS_REMAINING: 4 },
+  { ALERT_ID: 104, ACCOUNT_KEY: 'ACC_61044_OFFSHORE', SCORE: 0.78, MODEL_VERSION: 'CQ_DETECTOR_v1', STATUS: 'OPEN', CREATED_TS: new Date().toISOString(), SLA_DUE: new Date(Date.now() + 86400000 * 6).toISOString(), DAYS_REMAINING: 6 },
 ]
 
 export default function QueuePage() {
