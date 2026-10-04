@@ -40,9 +40,9 @@ export function ClaimCard({
       exit={{ opacity: 0, scale: 0.95 }}
       onClick={onClick}
       className={cn(
-        "bg-surface border border-hairline rounded-card p-4 shadow-1 cursor-pointer transition-all",
+        "bg-surface border border-hairline rounded-card p-4 shadow-1 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-2",
         "border-l-4", borderMap[v],
-        selected && "ring-2 ring-accent ring-offset-2 ring-offset-canvas"
+        selected && "ring-2 ring-accent ring-offset-2 ring-offset-canvas shadow-2"
       )}
     >
       <div className="flex items-start gap-4">

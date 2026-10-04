@@ -13,7 +13,7 @@ export function Layout() {
       <header className="glass-bar sticky top-0 z-50 px-6 py-3 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-accent text-white flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-blue-500 shadow-md shadow-accent/20 border border-white/10 text-white flex items-center justify-center font-bold">
               CQ
             </div>
             <span className="font-semibold text-title2 tracking-tight hidden sm:block">Cairnquill</span>

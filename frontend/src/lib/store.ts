@@ -26,7 +26,7 @@ export const useAppStore = create<AppStore>()(
     (set, get) => ({
       role: 'investigator',
       user: 'demo_investigator',
-      theme: 'light',
+      theme: 'dark',
       demoMode: true,
 
       setRole: (role) => {
