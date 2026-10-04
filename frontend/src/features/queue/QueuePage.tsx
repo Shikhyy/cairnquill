@@ -43,29 +43,18 @@ export default function QueuePage() {
     : alertsList
 
   return (
-    <div className="space-y-8 animate-in fade-in">
-      {/* Header with Stats Banner */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-4 border-b border-hairline/60">
+    <div className="space-y-6 animate-in fade-in">
+      {/* Clean Header Bar */}
+      <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-4 pb-4 border-b border-hairline">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 text-xs font-mono mb-2">
-            <ShieldAlert size={14} />
-            <span>ML Typology Pipeline: Active</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white">Triage & Investigation Queue</h1>
-          <p className="text-sm text-ink-2 mt-1">High-risk anomalous accounts detected via XGBoost on <code className="text-cyan-300 font-mono text-xs">FEATURES.ACCOUNT_FEATURES</code></p>
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">Triage &amp; Investigation Queue</h1>
+          <p className="text-xs text-ink-2 mt-1">High-risk anomalous accounts detected via XGBoost model on <code className="text-cyan-300 font-mono text-xs">FEATURES.ACCOUNT_FEATURES</code></p>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="glass-card px-4 py-2.5 rounded-xl border border-hairline/80 text-right">
-            <div className="text-2xl font-bold font-mono text-cyan-400">{alertsList.length}</div>
-            <div className="text-[10px] text-ink-2 font-mono uppercase tracking-wider">Unassigned Alerts</div>
-          </div>
-          <div className="glass-card px-4 py-2.5 rounded-xl border border-hairline/80 text-right">
-            <div className="text-2xl font-bold font-mono text-rose-400">
-              {alertsList.filter(a => a.DAYS_REMAINING <= 2).length}
-            </div>
-            <div className="text-[10px] text-ink-2 font-mono uppercase tracking-wider">SLA Urgency (&le;48h)</div>
-          </div>
+        <div className="flex items-center gap-4 text-xs font-mono text-ink-2">
+          <div><span className="text-white font-bold tabular-nums">{alertsList.length}</span> unassigned</div>
+          <span>•</span>
+          <div><span className="text-rose-400 font-bold tabular-nums">{alertsList.filter(a => a.DAYS_REMAINING <= 2).length}</span> urgent SLA</div>
         </div>
       </div>
 
