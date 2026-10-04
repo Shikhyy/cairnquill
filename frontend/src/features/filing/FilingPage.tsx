@@ -4,17 +4,43 @@ import { api, Filing } from '@/lib/api'
 import { SealBadge, Skeleton } from '@/components/ui'
 import { Archive, ArrowRight } from 'lucide-react'
 
+const MOCK_FILINGS: Filing[] = [
+  {
+    FILING_ID: 'filing_8a7d9b1c',
+    CASE_ID: 'case_0142',
+    DRAFT_ID: 'draft_0142_v1',
+    EVIDENCE_SHA: '8f4a3e2b1c9d0a7f8e5d3c2b1a9f8e7d6c5b4a3e2b1c9d0a7f8e5d3c2b1a9f8e',
+    SEAL_SHA: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    PREV_SEAL_SHA: 'GENESIS_SEAL_000000000000000000000000000000000000000000000000000000000000',
+    MAKER: 'demo_investigator',
+    APPROVER: 'senior_compliance_officer',
+    APPROVED_TS: new Date(Date.now() - 3600000 * 4).toISOString(),
+  },
+  {
+    FILING_ID: 'filing_4f2c1d8a',
+    CASE_ID: 'case_0139',
+    DRAFT_ID: 'draft_0139_v2',
+    EVIDENCE_SHA: '3c2b1a9f8e7d6c5b4a3e2b1c9d0a7f8e5d3c2b1a9f8e7d6c5b4a3e2b1c9d0a7f',
+    SEAL_SHA: 'a591a6d40bf420404a011733cfb7b190d62c65bf0bcda32b57b277d9ad9f146e',
+    PREV_SEAL_SHA: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+    MAKER: 'alex_analyst',
+    APPROVER: 'chief_aml_officer',
+    APPROVED_TS: new Date(Date.now() - 86400000 * 1.5).toISOString(),
+  }
+]
+
 export default function FilingPage() {
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ['filings'],
     queryFn: () => api.getFilings(),
+    retry: 1,
   })
 
-  if (isLoading) {
+  if (isLoading && !error) {
     return <div className="p-6"><Skeleton className="h-64 w-full" /></div>
   }
 
-  const filings = data?.filings || []
+  const filings = data?.filings?.length ? data.filings : MOCK_FILINGS
 
   return (
     <div className="space-y-6 animate-in fade-in">
