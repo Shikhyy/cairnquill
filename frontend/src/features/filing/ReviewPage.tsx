@@ -5,6 +5,7 @@ import { api } from '@/lib/api'
 import { Button, Chip, Skeleton, SealBadge } from '@/components/ui'
 import { ShieldCheck, MessageSquareX } from 'lucide-react'
 import { useAppStore } from '@/lib/store'
+import { useToastStore } from '@/lib/toast'
 
 export default function ReviewPage() {
   const { caseId } = useParams<{ caseId: string }>()
@@ -17,14 +18,24 @@ export default function ReviewPage() {
     queryFn: () => api.getCase(caseId!),
   })
 
+  const { addToast } = useToastStore()
+
   const approveMutation = useMutation({
     mutationFn: () => api.approveCase(caseId!),
-    onSuccess: (res) => navigate(`/filings`),
+    onSuccess: (res) => {
+      addToast('Case approved and sealed', 'success')
+      navigate(`/filings`)
+    },
+    onError: (err) => addToast(String(err), 'error')
   })
 
   const rejectMutation = useMutation({
     mutationFn: () => api.rejectCase(caseId!, comment),
-    onSuccess: () => navigate('/queue'),
+    onSuccess: () => {
+      addToast('Case rejected and sent back to draft', 'info')
+      navigate('/queue')
+    },
+    onError: (err) => addToast(String(err), 'error')
   })
 
   if (isLoading || !data) return <div className="p-6"><Skeleton className="h-64" /></div>

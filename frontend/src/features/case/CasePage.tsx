@@ -4,6 +4,7 @@ import { api } from '@/lib/api'
 import { Button, Chip, Skeleton, CairnStack, SlaRing } from '@/components/ui'
 import { Pickaxe, PenTool, AlertOctagon } from 'lucide-react'
 import { SubgraphCanvas } from './SubgraphCanvas'
+import { useToastStore } from '@/lib/toast'
 
 export default function CasePage() {
   const { caseId } = useParams<{ caseId: string }>()
@@ -15,9 +16,15 @@ export default function CasePage() {
     enabled: !!caseId,
   })
 
+  const { addToast } = useToastStore()
+
   const mineMutation = useMutation({
     mutationFn: () => api.mineEvidence(caseId!),
-    onSuccess: () => refetch(),
+    onSuccess: () => {
+      addToast('Evidence mined successfully', 'success')
+      refetch()
+    },
+    onError: (err) => addToast(String(err), 'error')
   })
 
   if (isLoading || !data) {

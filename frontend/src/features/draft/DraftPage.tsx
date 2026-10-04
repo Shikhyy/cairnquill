@@ -4,14 +4,22 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { api, VerifyResponse, Claim } from '@/lib/api'
 import { Button, ClaimCard, Chip, Skeleton } from '@/components/ui'
 import { CheckCircle2, AlertTriangle, ArrowRight, RefreshCcw } from 'lucide-react'
+import { useToastStore } from '@/lib/toast'
 
 export default function DraftPage() {
   const { caseId } = useParams<{ caseId: string }>()
   const navigate = useNavigate()
   const [activeClaimId, setActiveClaimId] = useState<string | null>(null)
 
+  const { addToast } = useToastStore()
+
   const draftMutation = useMutation({
     mutationFn: () => api.createDraft(caseId!),
+    onSuccess: (data) => {
+      if (data.blocked) addToast('Draft blocked. Surveyor found data mismatches.', 'error')
+      else addToast('Draft verified successfully', 'success')
+    },
+    onError: (err) => addToast(String(err), 'error')
   })
 
   // Start draft generation on mount if we don't have one
@@ -24,7 +32,11 @@ export default function DraftPage() {
 
   const submitMutation = useMutation({
     mutationFn: () => api.submitCase(caseId!),
-    onSuccess: () => navigate(`/cases/${caseId}`),
+    onSuccess: () => {
+      addToast('Draft submitted for approval', 'success')
+      navigate(`/cases/${caseId}`)
+    },
+    onError: (err) => addToast(String(err), 'error')
   })
 
   if (draftMutation.isPending) {
@@ -139,6 +151,24 @@ export default function DraftPage() {
                 Failed claims must be repaired or removed before submission.
               </p>
             )}
+          </div>
+          
+          {/* Demo Controls */}
+          <div className="bg-surface-2/30 p-5 rounded-card border border-hairline border-dashed">
+            <h3 className="text-xs font-bold text-accent uppercase tracking-wider mb-3">Demo Controls</h3>
+            <Button 
+              variant="outline" 
+              className="w-full text-xs" 
+              size="sm"
+              onClick={async () => {
+                if (verdicts.length > 0) {
+                  await api.injectError(draft_id, verdicts[0].claim_id, 'AMOUNT_X1_1');
+                  draftMutation.mutate();
+                }
+              }}
+            >
+              Inject Hallucination Error
+            </Button>
           </div>
         </div>
       </div>

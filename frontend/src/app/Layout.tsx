@@ -2,6 +2,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Activity, Archive, BarChart, Search, Sun, Moon } from 'lucide-react'
 import { useAppStore, Role } from '../lib/store'
 import { cn } from '../lib/utils'
+import { ToastContainer } from '../components/ui/Toast'
 
 export function Layout() {
   const { pathname } = useLocation()
@@ -57,6 +58,7 @@ export function Layout() {
       <main className="flex-1 max-w-6xl w-full mx-auto p-6">
         <Outlet />
       </main>
+      <ToastContainer />
     </div>
   )
 }

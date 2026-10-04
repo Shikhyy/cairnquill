@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import { api, Alert } from '@/lib/api'
 import { Button, Chip, SlaRing, Skeleton } from '@/components/ui'
 import { ArrowRight, AlertOctagon } from 'lucide-react'
+import { useToastStore } from '@/lib/toast'
 
 export default function QueuePage() {
   const navigate = useNavigate()
+  const { addToast } = useToastStore()
   
   const { data, isLoading, error } = useQuery({
     queryKey: ['alerts'],
@@ -18,7 +20,7 @@ export default function QueuePage() {
       navigate(`/cases/${res.case_id}`)
     } catch (err) {
       console.error(err)
-      alert('Failed to start case')
+      addToast('Failed to start case', 'error')
     }
   }
 
