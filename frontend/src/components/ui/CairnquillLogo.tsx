@@ -53,25 +53,25 @@ export function CairnquillLogo({
           <rect width="64" height="64" rx="16" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2" />
 
           {/* Stacked Cairn Stones */}
-          <!-- Base Foundation Stone -->
+          {/* Base Foundation Stone */}
           <path 
             d="M13 47C13 43 18.5 40.5 32 40.5C45.5 40.5 51 43 51 47C51 51 45.5 53.5 32 53.5C18.5 53.5 13 51 13 47Z" 
             fill="url(#cqGradStone1)" 
           />
           
-          <!-- Mid Stone -->
+          {/* Mid Stone */}
           <path 
             d="M18 33.5C18 30 23 28 32 28C41 28 46 30 46 33.5C46 37 41 39 32 39C23 39 18 37 18 33.5Z" 
             fill="url(#cqGradStone2)" 
           />
           
-          <!-- Keystone -->
+          {/* Keystone */}
           <path 
             d="M23 21C23 18.5 26.8 17 32 17C37.2 17 41 18.5 41 21C41 23.5 37.2 25 32 25C26.8 25 23 23.5 23 21Z" 
             fill="#10B981" 
           />
 
-          <!-- Quill Blade Overlay -->
+          {/* Quill Blade Overlay */}
           <path 
             d="M37 8L50 21L39 32L31.5 32L31.5 24.5L37 8Z" 
             fill="url(#cqGradQuill)" 
