@@ -1,4 +1,4 @@
-import * as React from 'react'
+
 import { motion, AnimatePresence } from 'motion/react'
 import { Check, X, HelpCircle, User, FileText, AlertTriangle } from 'lucide-react'
 import { type Claim, type VerdictItem } from '@/lib/api'

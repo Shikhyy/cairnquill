@@ -1,5 +1,5 @@
 import { cn } from '@/lib/utils'
-import { Clock } from 'lucide-react'
+
 
 export function SlaRing({ daysRemaining, className }: { daysRemaining: number, className?: string }) {
   const percentage = Math.max(0, Math.min(100, (daysRemaining / 7) * 100))
