@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Layout } from './Layout'
+import LandingPage from '../features/landing/LandingPage'
 import QueuePage from '../features/queue/QueuePage'
 import CasePage from '../features/case/CasePage'
 import DraftPage from '../features/draft/DraftPage'
@@ -13,7 +14,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/queue" replace />} />
+          <Route index element={<LandingPage />} />
           <Route path="queue" element={<QueuePage />} />
           <Route path="cases/:caseId" element={<CasePage />} />
           <Route path="cases/:caseId/draft" element={<DraftPage />} />
