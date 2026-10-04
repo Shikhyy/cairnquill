@@ -51,15 +51,20 @@ export default function DraftPage() {
 
   if (!draftMutation.data) return null
 
-  const { draft_id, blocked, verdicts, omissions, status } = draftMutation.data
+  const { draft_id, blocked, verdicts, omissions, claims, status } = draftMutation.data
   const failedCount = verdicts.filter(v => v.verdict === 'CONTRADICTED' || v.verdict === 'UNSUPPORTED').length
   const verifiedCount = verdicts.filter(v => v.verdict === 'VERIFIED').length
-  
-  // We don't have the full claim text in the VerifyResponse, only in the Draft object.
-  // In a real app we'd fetch the Draft. For this prototype, we'll mock the text based on the claim_id if it's not present.
-  // Actually, wait, our API response from createDraft doesn't include the claims array, only verdicts.
-  // We need to fetch the draft to get the claim text. Let's do a quick query for the case to get the latest draft claims if possible.
-  // Wait, the API for `createDraft` doesn't return claims. I'll just render the verdicts for now.
+
+  const getClaim = (claimId: string) => {
+    return claims?.find(c => c.claim_id === claimId) || {
+      claim_id: claimId,
+      type: 'SUM_AMOUNT' as any,
+      text: `Unknown Claim ${claimId}`,
+      params: {},
+      asserted: null,
+      evidence_ids: []
+    }
+  }
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in">
@@ -82,14 +87,7 @@ export default function DraftPage() {
             {verdicts.map(v => (
               <ClaimCard
                 key={v.claim_id}
-                claim={{ 
-                  claim_id: v.claim_id, 
-                  type: 'SUM_AMOUNT', // fallback mock
-                  text: `Claim ${v.claim_id}`, 
-                  params: {}, 
-                  asserted: v.asserted, 
-                  evidence_ids: [] 
-                }}
+                claim={getClaim(v.claim_id)}
                 verdictItem={v}
                 selected={activeClaimId === v.claim_id}
                 onClick={() => setActiveClaimId(v.claim_id)}

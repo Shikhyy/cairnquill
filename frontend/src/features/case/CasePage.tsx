@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { Button, Chip, Skeleton, CairnStack, SlaRing } from '@/components/ui'
 import { Pickaxe, PenTool, AlertOctagon } from 'lucide-react'
+import { SubgraphCanvas } from './SubgraphCanvas'
 
 export default function CasePage() {
   const { caseId } = useParams<{ caseId: string }>()
@@ -104,18 +105,23 @@ export default function CasePage() {
                <div className="p-4 border-b border-hairline bg-surface-2/30">
                  <h2 className="font-semibold">Mined Evidence Cairns</h2>
                </div>
-               <div className="divide-y divide-hairline">
-                 {cairns.map(cairn => (
-                   <div key={cairn.CAIRN_ID} className="p-4 hover:bg-surface-2/20">
-                     <div className="flex items-center gap-2 mb-2">
-                       <span className="font-mono text-xs text-ink-2">{cairn.CAIRN_ID}</span>
-                       <Chip>{cairn.PATTERN_TYPE}</Chip>
+               <div className="p-4 flex gap-4 h-64">
+                 <div className="flex-1 overflow-y-auto pr-2 divide-y divide-hairline border border-hairline rounded-lg">
+                   {cairns.map(cairn => (
+                     <div key={cairn.CAIRN_ID} className="p-3 hover:bg-surface-2/20 text-sm">
+                       <div className="flex items-center justify-between mb-1">
+                         <span className="font-mono text-xs text-ink-2">{cairn.CAIRN_ID}</span>
+                         <Chip variant="default">{cairn.PATTERN_TYPE}</Chip>
+                       </div>
+                       <div className="text-xs text-ink-2 truncate max-w-full">
+                         {JSON.stringify(cairn.SUMMARY).substring(0, 50)}...
+                       </div>
                      </div>
-                     <pre className="text-xs font-mono bg-surface-2/50 p-2 rounded-md overflow-x-auto text-ink-2">
-                       {JSON.stringify(cairn.SUMMARY, null, 2)}
-                     </pre>
-                   </div>
-                 ))}
+                   ))}
+                 </div>
+                 <div className="flex-[2] h-full">
+                   <SubgraphCanvas cairns={cairns} />
+                 </div>
                </div>
              </div>
           )}

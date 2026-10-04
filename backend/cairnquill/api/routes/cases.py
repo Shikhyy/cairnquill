@@ -235,7 +235,7 @@ async def create_draft(
     execute_query(conn, "UPDATE CASES.CASES SET status=%s, updated_ts=CURRENT_TIMESTAMP() WHERE case_id=%s", (new_status, case_id))
     _log_event(conn, case_id, user, "DRAFT", {"draft_id": draft_id, "blocked": verification.blocked})
 
-    return verification.to_api_dict() | {"draft_id": draft_id, "status": new_status}
+    return verification.to_api_dict() | {"draft_id": draft_id, "status": new_status, "claims": [c.model_dump() for c in draft.claims]}
 
 
 # ── Verify ────────────────────────────────────────────────────────────────────
@@ -269,7 +269,7 @@ async def verify_case(
     execute_query(conn, "UPDATE CASES.CASES SET status=%s, updated_ts=CURRENT_TIMESTAMP() WHERE case_id=%s", (new_status, case_id))
     _log_event(conn, case_id, user, "VERIFY", {"blocked": verification.blocked})
 
-    return verification.to_api_dict()
+    return verification.to_api_dict() | {"claims": [c.model_dump() for c in draft.claims]}
 
 
 # ── Submit ────────────────────────────────────────────────────────────────────

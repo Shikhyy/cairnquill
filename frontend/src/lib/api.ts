@@ -158,6 +158,7 @@ export interface VerifyResponse {
   draft_id: string
   blocked: boolean
   verdicts: VerdictItem[]
+  claims?: Claim[]
   omissions: string[]
 }
 
