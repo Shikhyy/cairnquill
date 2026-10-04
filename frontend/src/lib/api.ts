@@ -5,7 +5,7 @@
 
 import { useAppStore } from './store'
 
-const BASE = '/api'
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000/api'
 
 function getHeaders(): HeadersInit {
   const { role, user } = useAppStore.getState()
