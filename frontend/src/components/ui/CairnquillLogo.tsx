@@ -11,7 +11,6 @@ export function CairnquillLogo({
   size = 32,
   showText = false,
   className = '',
-  glow = true,
 }: CairnquillLogoProps) {
   return (
     <div className={`inline-flex items-center gap-2.5 select-none ${className}`}>
@@ -19,80 +18,44 @@ export function CairnquillLogo({
         className="relative flex items-center justify-center shrink-0" 
         style={{ width: size, height: size }}
       >
-        {glow && (
-          <div 
-            className="absolute inset-0 rounded-xl bg-gradient-to-tr from-accent/40 via-cyan-400/30 to-verified/40 blur-md opacity-75 -z-10 animate-pulse" 
-            style={{ animationDuration: '4s' }}
-          />
-        )}
         <svg 
           viewBox="0 0 64 64" 
           fill="none" 
           xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full drop-shadow-md"
+          className="w-full h-full"
         >
-          <defs>
-            <linearGradient id="cqGradStone1" x1="12" y1="42" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#38BDF8" />
-              <stop offset="60%" stopColor="#2563EB" />
-              <stop offset="100%" stopColor="#059669" />
-            </linearGradient>
-            <linearGradient id="cqGradStone2" x1="18" y1="28" x2="46" y2="38" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#06B6D4" />
-              <stop offset="100%" stopColor="#3B82F6" />
-            </linearGradient>
-            <linearGradient id="cqGradQuill" x1="30" y1="6" x2="50" y2="36" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stopColor="#C084FC" />
-              <stop offset="50%" stopColor="#818CF8" />
-              <stop offset="100%" stopColor="#4F46E5" />
-            </linearGradient>
-          </defs>
+          {/* Deep Obsidian Tile */}
+          <rect width="64" height="64" rx="8" fill="#0E1015" />
+          <rect width="64" height="64" rx="8" stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
 
-          {/* Base Container */}
-          <rect width="64" height="64" rx="16" fill="#0A0B11" />
-          <rect width="64" height="64" rx="16" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2" />
+          {/* Base Stone: Titanium Facet */}
+          <path d="M12 45L22 39H42L52 45L40 51H24L12 45Z" fill="#181B24" stroke="rgba(255,255,255,0.14)" strokeWidth="1.2"/>
+          <path d="M24 51L32 46L40 51L32 53L24 51Z" fill="#11131A"/>
 
-          {/* Stacked Cairn Stones */}
-          {/* Base Foundation Stone */}
-          <path 
-            d="M13 47C13 43 18.5 40.5 32 40.5C45.5 40.5 51 43 51 47C51 51 45.5 53.5 32 53.5C18.5 53.5 13 51 13 47Z" 
-            fill="url(#cqGradStone1)" 
-          />
-          
-          {/* Mid Stone */}
-          <path 
-            d="M18 33.5C18 30 23 28 32 28C41 28 46 30 46 33.5C46 37 41 39 32 39C23 39 18 37 18 33.5Z" 
-            fill="url(#cqGradStone2)" 
-          />
-          
-          {/* Keystone */}
-          <path 
-            d="M23 21C23 18.5 26.8 17 32 17C37.2 17 41 18.5 41 21C41 23.5 37.2 25 32 25C26.8 25 23 23.5 23 21Z" 
-            fill="#10B981" 
-          />
+          {/* Mid Stone: Basalt Balance */}
+          <path d="M17 33L26 28H38L47 33L37 38H27L17 33Z" fill="#222734" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2"/>
 
-          {/* Quill Blade Overlay */}
-          <path 
-            d="M37 8L50 21L39 32L31.5 32L31.5 24.5L37 8Z" 
-            fill="url(#cqGradQuill)" 
-          />
-          <circle cx="35" cy="27" r="1.75" fill="#FFFFFF" />
-          <line x1="39" y1="23" x2="35" y2="27" stroke="#FFFFFF" strokeWidth="1" strokeLinecap="round" />
+          {/* Keystone: Ground Truth Emerald */}
+          <path d="M22 21L32 15L42 21L32 26L22 21Z" fill="#10B981" fillOpacity="0.95" stroke="#34D399" strokeWidth="1.2"/>
+
+          {/* The Precision Quill: 45-degree surgical hairline */}
+          <line x1="44" y1="11" x2="28" y2="27" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round"/>
+          <circle cx="28" cy="27" r="1.5" fill="#FFFFFF"/>
         </svg>
       </div>
 
       {showText && (
         <div className="flex flex-col leading-none">
           <div className="flex items-center gap-1.5">
-            <span className="font-semibold text-lg tracking-tight bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">
+            <span className="font-semibold text-sm tracking-tight text-ink">
               Cairnquill
             </span>
-            <span className="px-1.5 py-0.5 text-[9px] font-mono tracking-widest font-bold uppercase rounded bg-accent/20 text-cyan-400 border border-cyan-500/30">
+            <span className="px-1.5 py-0.5 text-[9px] font-mono tracking-widest font-semibold uppercase rounded-[3px] bg-surface-2 text-ink-2 border border-hairline">
               CoCo
             </span>
           </div>
-          <span className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase mt-0.5">
-            Deterministic AML Copilot
+          <span className="text-[10px] font-mono text-ink-2 tracking-wider uppercase mt-0.5">
+            Cryptographic STR Copilot
           </span>
         </div>
       )}

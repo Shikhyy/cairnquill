@@ -1,9 +1,8 @@
-
 import { motion, AnimatePresence } from 'motion/react'
-import { Check, X, HelpCircle, User, FileText, AlertTriangle } from 'lucide-react'
 import { type Claim, type VerdictItem } from '@/lib/api'
 import { cn } from '@/lib/utils'
 import { Chip } from './Chip'
+import { sound } from '@/lib/soundEngine'
 
 export function ClaimCard({
   claim,
@@ -18,78 +17,115 @@ export function ClaimCard({
 }) {
   const v = verdictItem?.verdict || 'UNSUPPORTED'
   
-  const iconMap = {
-    VERIFIED: <Check size={18} className="text-verified" />,
-    CONTRADICTED: <X size={18} className="text-contradicted" />,
-    UNSUPPORTED: <HelpCircle size={18} className="text-unsupported" />,
-    JUDGEMENT: <User size={18} className="text-judgement" />
+  const statusConfig = {
+    VERIFIED: {
+      badge: 'verified' as const,
+      border: 'border-emerald-500/30',
+      label: 'VERIFIED',
+      desc: 'Matches ground truth evidence snapshot'
+    },
+    CONTRADICTED: {
+      badge: 'contradicted' as const,
+      border: 'border-rose-500/40 bg-rose-500/[0.02]',
+      label: 'CONTRADICTED',
+      desc: 'Hallucination detected by Surveyor SQL template'
+    },
+    UNSUPPORTED: {
+      badge: 'unsupported' as const,
+      border: 'border-slate-500/30',
+      label: 'UNSUPPORTED',
+      desc: 'Cites transaction IDs absent from evidence cairn'
+    },
+    JUDGEMENT: {
+      badge: 'judgement' as const,
+      border: 'border-purple-500/30',
+      label: 'JUDGEMENT',
+      desc: 'Qualitative analyst reasoning (excluded from numeric verification)'
+    }
   }
 
-  const borderMap = {
-    VERIFIED: 'border-l-verified',
-    CONTRADICTED: 'border-l-contradicted',
-    UNSUPPORTED: 'border-l-unsupported',
-    JUDGEMENT: 'border-l-judgement',
-  }
+  const current = statusConfig[v as keyof typeof statusConfig] || statusConfig.UNSUPPORTED
 
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      onClick={onClick}
+      exit={{ opacity: 0, scale: 0.98 }}
+      onClick={() => {
+        sound.playClick(850, 0.02)
+        onClick?.()
+      }}
       className={cn(
-        "bg-surface border border-hairline rounded-card p-4 shadow-1 cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-2",
-        "border-l-4", borderMap[v],
-        selected && "ring-2 ring-accent ring-offset-2 ring-offset-canvas shadow-2"
+        "bg-surface border rounded-[4px] p-4 transition-all cursor-pointer relative",
+        selected 
+          ? "border-accent ring-1 ring-accent/30 shadow-inset" 
+          : cn("border-hairline hover:border-hairline-bold hover:bg-surface-2/40", current.border)
       )}
     >
-      <div className="flex items-start gap-4">
-        <div className="pt-1">{iconMap[v]}</div>
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <span className="font-mono text-xs text-ink-2">{claim.claim_id}</span>
-            <Chip variant={v.toLowerCase() as any}>{v}</Chip>
-            {claim.type !== 'JUDGEMENT' && (
-              <span className="text-xs text-ink-2 ml-auto">{claim.type}</span>
-            )}
-          </div>
-          <p className="text-body font-medium text-ink leading-snug">{claim.text}</p>
-          
-          <AnimatePresence>
-            {v === 'CONTRADICTED' && verdictItem?.actual && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: 'auto', opacity: 1 }}
-                className="mt-3 p-3 bg-contradicted/5 rounded-md border border-contradicted/10 text-sm"
-              >
-                <div className="flex items-start gap-2 text-contradicted">
-                  <AlertTriangle size={16} className="shrink-0 mt-0.5" />
-                  <div>
-                    <div className="font-semibold mb-1">Data mismatch</div>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <span className="opacity-75 block">Asserted</span>
-                        <span className="font-mono tabular-nums">{verdictItem.asserted?.value} {verdictItem.asserted?.currency}</span>
-                      </div>
-                      <div>
-                        <span className="opacity-75 block">Actual</span>
-                        <span className="font-mono tabular-nums">{verdictItem.actual.value} {verdictItem.actual.currency}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
-          <div className="mt-3 flex items-center gap-2 text-xs text-ink-2">
-            <FileText size={14} />
-            <span>{claim.evidence_ids.length} txns referenced</span>
-          </div>
+      <div className="flex items-center justify-between gap-3 mb-2.5">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-xs font-semibold text-ink-2">{claim.claim_id}</span>
+          <Chip variant={current.badge}>{current.label}</Chip>
+        </div>
+
+        <div className="flex items-center gap-2 text-[11px] font-mono text-ink-faint">
+          <span>{claim.type}</span>
+          {claim.evidence_ids?.length > 0 && (
+            <span className="px-1.5 py-0.2 rounded bg-surface-2 text-ink-2 border border-hairline">
+              {claim.evidence_ids.length} txns
+            </span>
+          )}
         </div>
       </div>
+
+      <p className="text-body font-normal text-ink leading-relaxed mb-3">
+        {claim.text}
+      </p>
+
+      {/* Discrepancy comparison when contradicted */}
+      <AnimatePresence>
+        {v === 'CONTRADICTED' && verdictItem?.actual && (
+          <motion.div 
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="p-3 bg-rose-500/10 rounded-[3px] border border-rose-500/30 text-xs font-mono space-y-2"
+          >
+            <div className="text-rose-400 font-semibold tracking-wide flex items-center justify-between">
+              <span>SURVEYOR CONTRADICTION DETECTED</span>
+              <span className="text-[10px] text-rose-300">BLOCKS FILING</span>
+            </div>
+            <div className="grid grid-cols-2 gap-3 pt-1 border-t border-rose-500/20 text-xs">
+              <div>
+                <span className="text-rose-400/80 block text-[10px] uppercase">LLM Asserted</span>
+                <span className="font-bold text-rose-200 tabular-nums">
+                  {verdictItem.asserted?.value} {verdictItem.asserted?.currency || ''}
+                </span>
+              </div>
+              <div>
+                <span className="text-rose-400/80 block text-[10px] uppercase">Ground Truth Actual</span>
+                <span className="font-bold text-rose-200 tabular-nums">
+                  {verdictItem.actual.value} {verdictItem.actual.currency || ''}
+                </span>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Citations footer */}
+      {claim.evidence_ids && claim.evidence_ids.length > 0 && (
+        <div className="pt-2.5 mt-2 border-t border-hairline/60 flex items-center justify-between text-[11px] font-mono text-ink-faint">
+          <div className="flex items-center gap-1.5">
+            <span>TXNS:</span>
+            <span className="text-ink-2">
+              [{claim.evidence_ids.slice(0, 4).join(', ')}{claim.evidence_ids.length > 4 ? '...' : ''}]
+            </span>
+          </div>
+          <span className="text-[10px] text-ink-faint">{current.desc}</span>
+        </div>
+      )}
     </motion.div>
   )
 }

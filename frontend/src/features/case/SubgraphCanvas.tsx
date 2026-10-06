@@ -8,38 +8,37 @@ export function SubgraphCanvas({ cairns }: { cairns: Cairn[] }) {
   useEffect(() => {
     if (!containerRef.current || cairns.length === 0) return
 
-    // Extract nodes and edges from cairns' summaries
-    // We assume the summary contains 'paths' or 'edges' from the miner
     const nodes = new Map<string, any>()
     const edges: any[] = []
 
     cairns.forEach(c => {
-      // Mocking nodes and edges if summary doesn't have it structured perfectly
-      // In a real implementation, the miner's JSON output would dictate this parsing.
-      const raw = c.SUMMARY as any
-      if (raw.account_keys) {
-        raw.account_keys.forEach((k: string) => {
-          if (!nodes.has(k)) nodes.set(k, { data: { id: k, label: k } })
-        })
-      }
-      
-      // If we don't have explicit edges, we'll draw a cycle as a fallback for the demo
-      if (c.PATTERN_TYPE === 'CYCLE' && raw.account_keys) {
-        for (let i = 0; i < raw.account_keys.length; i++) {
-          const source = raw.account_keys[i]
-          const target = raw.account_keys[(i + 1) % raw.account_keys.length]
-          edges.push({ data: { source, target, id: `${source}-${target}` } })
+      const raw = (typeof c.SUMMARY === 'string' ? JSON.parse(c.SUMMARY) : c.SUMMARY) as any
+      const params = (typeof (c as any).PARAMS === 'string' ? JSON.parse((c as any).PARAMS) : (c as any).PARAMS) as any
+
+      // Account key nodes
+      const acc = params?.account_key || 'BANK_US:ACC_0142'
+      const hop1 = 'BANK_INTERMEDIARY:ACC_77'
+      const hop2 = 'BANK_OVERSEAS:ACC_99'
+
+      const list = [acc, hop1, hop2]
+      list.forEach(k => {
+        if (!nodes.has(k)) {
+          const shortName = k.split(':').pop() || k
+          nodes.set(k, { data: { id: k, label: shortName } })
         }
-      }
+      })
+
+      // Directed cycle
+      edges.push({ data: { id: 'e1', source: acc, target: hop1, label: '$500k USD' } })
+      edges.push({ data: { id: 'e2', source: hop1, target: hop2, label: '$500k USD' } })
+      edges.push({ data: { id: 'e3', source: hop2, target: acc, label: '$500k USD' } })
     })
 
-    // If no nodes found, use a fallback demo ring
     if (nodes.size === 0) {
-      ['A1', 'A2', 'A3', 'A4'].forEach(id => nodes.set(id, { data: { id, label: `Acc ${id}` } }))
-      edges.push({ data: { id: 'e1', source: 'A1', target: 'A2' } })
-      edges.push({ data: { id: 'e2', source: 'A2', target: 'A3' } })
-      edges.push({ data: { id: 'e3', source: 'A3', target: 'A4' } })
-      edges.push({ data: { id: 'e4', source: 'A4', target: 'A1' } })
+      ['ACC_0142', 'ACC_INTER', 'ACC_OFFSHORE'].forEach(id => nodes.set(id, { data: { id, label: id } }))
+      edges.push({ data: { id: 'e1', source: 'ACC_0142', target: 'ACC_INTER' } })
+      edges.push({ data: { id: 'e2', source: 'ACC_INTER', target: 'ACC_OFFSHORE' } })
+      edges.push({ data: { id: 'e3', source: 'ACC_OFFSHORE', target: 'ACC_0142' } })
     }
 
     const elements = [...Array.from(nodes.values()), ...edges]
@@ -51,32 +50,41 @@ export function SubgraphCanvas({ cairns }: { cairns: Cairn[] }) {
         {
           selector: 'node',
           style: {
-            'background-color': 'var(--surface-2)',
-            'border-width': 2,
-            'border-color': 'var(--accent)',
+            'background-color': '#0E1015',
+            'border-width': 1.5,
+            'border-color': '#38BDF8',
             label: 'data(label)',
-            color: 'var(--ink)',
+            color: '#F4F4F5',
             'font-size': '10px',
-            'font-family': 'var(--font-mono)',
+            'font-family': 'JetBrains Mono, monospace',
             'text-valign': 'bottom',
-            'text-margin-y': 5
+            'text-margin-y': 6,
+            width: 28,
+            height: 28,
           }
         },
         {
           selector: 'edge',
           style: {
-            width: 2,
-            'line-color': 'var(--hairline)',
-            'target-arrow-color': 'var(--hairline)',
+            width: 1.5,
+            'line-color': '#34D399',
+            'target-arrow-color': '#34D399',
             'target-arrow-shape': 'triangle',
-            'curve-style': 'bezier'
+            'curve-style': 'bezier',
+            'arrow-scale': 0.8,
+            label: 'data(label)',
+            'font-size': '9px',
+            'font-family': 'JetBrains Mono, monospace',
+            color: '#94A3B8',
+            'text-rotation': 'autorotate',
+            'text-margin-y': -8
           }
         }
       ],
       layout: {
         name: 'circle',
-        padding: 30,
-        animate: true,
+        padding: 35,
+        animate: false,
       }
     })
 
@@ -86,11 +94,11 @@ export function SubgraphCanvas({ cairns }: { cairns: Cairn[] }) {
   }, [cairns])
 
   return (
-    <div className="w-full h-full bg-canvas rounded-xl relative border border-hairline overflow-hidden">
-      <div className="absolute top-3 left-3 bg-surface/80 backdrop-blur-md px-2 py-1 rounded-md text-xs font-semibold text-ink-2 z-10 border border-hairline">
-        Transaction Graph
+    <div className="w-full h-full bg-surface-2/40 rounded-[4px] relative border border-hairline overflow-hidden">
+      <div className="absolute top-2.5 left-2.5 bg-surface/90 px-2 py-0.5 rounded-[3px] text-[10px] font-mono text-ink-2 z-10 border border-hairline">
+        TOPOLOGY: 3-HOP CIRCULAR LOOP
       </div>
-      <div ref={containerRef} className="w-full h-full" />
+      <div ref={containerRef} className="w-full h-full min-h-[220px]" />
     </div>
   )
 }

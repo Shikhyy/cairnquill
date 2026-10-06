@@ -1,5 +1,4 @@
 import { Outlet, Link, useLocation } from 'react-router-dom'
-import { Sun, Moon } from 'lucide-react'
 import { useAppStore, Role } from '../lib/store'
 import { cn } from '../lib/utils'
 import { ToastContainer } from '../components/ui/Toast'
@@ -10,63 +9,77 @@ import { FilmGrain } from '../components/FilmGrain'
 import { SmoothScroll } from '../components/SmoothScroll'
 import { SoundToggle } from '../components/SoundToggle'
 import { LegalArchitecture } from '../components/modals/LegalModals'
+import { sound } from '../lib/soundEngine'
 
 export function Layout() {
   const { pathname } = useLocation()
-  const { role, setRole, theme, toggleTheme } = useAppStore()
+  const { role, setRole } = useAppStore()
 
   return (
     <SmoothScroll>
-      <div className="min-h-screen flex flex-col bg-canvas selection:bg-cyan-500/20 selection:text-cyan-200 relative">
+      <div className="min-h-screen flex flex-col bg-canvas text-ink selection:bg-accent/20 selection:text-accent-light relative">
         {/* Persistent 3D WebGL Cairn Canvas */}
         <PersistentCairnCanvas />
 
-        {/* Cinematic Film Grain Overlay (Eliminates color banding) */}
+        {/* 3.5% Monochromatic SVG Film Grain Overlay */}
         <FilmGrain />
 
-        {/* Custom Lerped Magnetic Cursor with mix-blend difference */}
+        {/* Custom Lerped Magnetic Cursor */}
         <CustomCursor />
 
-        {/* Minimal Top Navigation */}
-        <header className="sticky top-0 z-50 px-6 py-3.5 flex items-center justify-between border-b border-hairline/60 bg-surface/75 backdrop-blur-xl">
+        {/* Global Toast Notifications */}
+        <ToastContainer />
+
+        {/* Surgical Architectural Header */}
+        <header className="sticky top-0 z-50 px-6 py-3 flex items-center justify-between border-b border-hairline bg-surface/90 backdrop-blur-xl">
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group" data-magnetic="0.3">
-              <CairnquillLogo size={28} showText={false} glow={false} />
-              <span className="font-semibold text-sm tracking-tight text-white group-hover:text-cyan-400 transition-colors">
-                Cairnquill
-              </span>
-              <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-2 text-zinc-400 border border-hairline/60">
-                STR Copilot
-              </span>
+            <Link 
+              to="/" 
+              onClick={() => sound.playClick(800, 0.02)}
+              className="flex items-center gap-2.5 group" 
+              data-magnetic="0.3"
+            >
+              <CairnquillLogo size={26} showText={false} />
+              <div className="flex items-baseline gap-2">
+                <span className="font-semibold text-sm tracking-tight text-ink group-hover:text-accent transition-colors">
+                  Cairnquill
+                </span>
+                <span className="text-[10px] font-mono px-1.5 py-0.2 rounded-[3px] bg-surface-2 text-ink-2 border border-hairline">
+                  v0.1.0-SNOWFLAKE
+                </span>
+              </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-6 text-xs font-medium">
-              <NavLink to="/queue" current={pathname} label="Triage Queue" />
-              <NavLink to="/filings" current={pathname} label="Sealed Filings" />
+            <nav className="hidden md:flex items-center gap-1 text-xs font-medium">
+              <HeaderNavLink to="/queue" current={pathname} label="Triage Queue" />
+              <HeaderNavLink to="/filings" current={pathname} label="Sealed Filings" />
               {(role === 'dev' || role === 'auditor') && (
-                <NavLink to="/eval" current={pathname} label="Scoreboard" />
+                <HeaderNavLink to="/eval" current={pathname} label="Scoreboard" />
               )}
-              <NavLink to="/ask" current={pathname} label="Ask Cortex" />
+              <HeaderNavLink to="/ask" current={pathname} label="Regulatory Assistant" />
             </nav>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Live Procedural Sound Toggle */}
+            {/* Live Procedural Web Audio Sound Engine */}
             <SoundToggle />
 
-            {/* Subtle Connection Indicator */}
-            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-md bg-surface-2/60 border border-hairline/60 text-zinc-300 text-xs font-mono">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              <span>Snowflake Cortex</span>
+            {/* Verification Engine Indicator */}
+            <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-[4px] bg-surface-2 border border-hairline text-ink-2 text-[11px] font-mono">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>Cortex Verifier</span>
             </div>
 
-            {/* Minimal Role Selector */}
-            <div className="flex items-center gap-1.5 bg-surface-2/60 px-2.5 py-1 rounded-md border border-hairline/60 text-xs">
-              <span className="text-zinc-500 font-mono">Role:</span>
+            {/* Hardware-Style Role Switcher */}
+            <div className="flex items-center gap-1.5 bg-surface-2 px-2.5 py-1 rounded-[4px] border border-hairline text-xs font-mono">
+              <span className="text-ink-faint">ROLE:</span>
               <select
                 value={role}
-                onChange={(e) => setRole(e.target.value as Role)}
-                className="bg-transparent border-none outline-none font-medium text-white cursor-pointer text-xs capitalize"
+                onChange={(e) => {
+                  sound.playClick(600, 0.03)
+                  setRole(e.target.value as Role)
+                }}
+                className="bg-transparent border-none outline-none font-semibold text-ink cursor-pointer text-xs uppercase"
               >
                 <option value="investigator" className="bg-surface text-ink">Investigator (Maker)</option>
                 <option value="approver" className="bg-surface text-ink">Approver (Checker)</option>
@@ -74,55 +87,52 @@ export function Layout() {
                 <option value="dev" className="bg-surface text-ink">Dev (Demo Injection)</option>
               </select>
             </div>
-            
-            <button 
-              onClick={toggleTheme} 
-              data-magnetic="0.4"
-              className="p-1.5 rounded-md hover:bg-surface-2 text-zinc-400 hover:text-white transition-colors border border-hairline/40"
-              title="Toggle Theme"
-            >
-              {theme === 'light' ? <Moon size={14} /> : <Sun size={14} />}
-            </button>
           </div>
         </header>
         
+        {/* Main Content Area */}
         <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
           <Outlet />
         </main>
 
-        {/* Awwwards Polished Footer with Legal Architecture */}
-        <footer className="mt-auto border-t border-hairline/60 bg-surface/60 backdrop-blur-md py-8 px-6 text-xs text-ink-2 relative z-10">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Architectural Footer with Legal Architecture */}
+        <footer className="mt-auto border-t border-hairline bg-surface/80 backdrop-blur-md py-8 px-6 text-xs text-ink-2 relative z-10">
+          <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <CairnquillLogo size={22} showText={false} glow={false} />
-              <span className="font-medium text-white">Cairnquill Protocol</span>
-              <span className="text-hairline">•</span>
-              <span className="text-zinc-500">Autonomous AML STR Intelligence</span>
+              <CairnquillLogo size={20} showText={false} />
+              <span className="font-semibold text-ink">Cairnquill Protocol</span>
+              <span className="text-hairline">|</span>
+              <span className="text-ink-2 font-mono text-[11px]">Deterministic STR Verification</span>
+              <span className="text-hairline">|</span>
+              <span className="text-ink-faint font-mono text-[11px]">Synthetic Evaluation Sandbox</span>
             </div>
 
-            {/* Legal Architecture (Anti-Slop Guardrail Compliance) */}
             <LegalArchitecture />
           </div>
         </footer>
-
-        <ToastContainer />
       </div>
     </SmoothScroll>
   )
 }
 
-function NavLink({ to, current, icon, label }: { to: string, current: string, icon?: React.ReactNode, label: string }) {
-  const active = current.startsWith(to)
+function HeaderNavLink({ to, current, label }: { to: string; current: string; label: string }) {
+  const isActive = current === to || (to !== '/' && current.startsWith(to))
   return (
     <Link
       to={to}
+      onClick={() => sound.playClick(900, 0.02)}
+      data-magnetic="0.2"
       className={cn(
-        "flex items-center gap-1.5 py-1 text-xs transition-colors",
-        active ? "text-white font-semibold border-b border-white" : "text-zinc-400 hover:text-white"
+        "px-3 py-1.5 rounded-[4px] transition-all relative font-mono text-xs",
+        isActive 
+          ? "text-ink font-semibold bg-surface-2 border border-hairline shadow-inset" 
+          : "text-ink-2 hover:text-ink hover:bg-surface-2/50"
       )}
     >
-      {icon && icon}
       {label}
+      {isActive && (
+        <span className="absolute bottom-0 left-2 right-2 h-[2px] bg-accent rounded-full" />
+      )}
     </Link>
   )
 }

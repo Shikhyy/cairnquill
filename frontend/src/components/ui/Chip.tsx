@@ -11,17 +11,17 @@ export function Chip({
   className?: string 
 }) {
   const variants = {
-    default: 'bg-surface-2 text-ink',
-    verified: 'bg-verified/10 text-verified border border-verified/20',
-    contradicted: 'bg-contradicted/10 text-contradicted border border-contradicted/20',
-    unsupported: 'bg-unsupported/10 text-unsupported border border-unsupported/20',
-    judgement: 'bg-judgement/10 text-judgement border border-judgement/20',
-    danger: 'bg-danger/10 text-danger border border-danger/20',
+    default: 'bg-surface-2 text-ink-2 border-hairline',
+    verified: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/25',
+    contradicted: 'bg-rose-500/10 text-rose-400 border-rose-500/25',
+    unsupported: 'bg-slate-500/10 text-slate-400 border-slate-500/25',
+    judgement: 'bg-purple-500/10 text-purple-400 border-purple-500/25',
+    danger: 'bg-rose-500/10 text-rose-400 border-rose-500/25',
   }
 
   return (
     <span className={cn(
-      "inline-flex items-center px-2 py-0.5 rounded-pill text-[11px] font-bold uppercase tracking-wider",
+      "inline-flex items-center px-2 py-0.5 rounded-[3px] text-[10px] font-mono font-semibold uppercase tracking-wider border",
       variants[variant],
       className
     )}>

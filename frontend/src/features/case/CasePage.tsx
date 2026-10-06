@@ -1,44 +1,46 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
-import { Button, Chip, Skeleton, CairnStack, SlaRing } from '@/components/ui'
-import { Pickaxe, PenTool, AlertOctagon } from 'lucide-react'
+import { Button, Chip, Skeleton, SlaRing } from '@/components/ui'
 import { SubgraphCanvas } from './SubgraphCanvas'
 import { useToastStore } from '@/lib/toast'
+import { sound } from '@/lib/soundEngine'
 
 const MOCK_CASE_DATA = {
   case: {
     CASE_ID: 'case_0142',
-    ALERT_ID: 101,
-    ACCOUNT_KEY: 'ACC_98231_CORP',
-    TYPOLOGY_DETECTED: 'CIRCULAR_LAYERING',
+    ALERT_ID: 1,
+    ACCOUNT_KEY: 'BANK_US:ACC_0142',
+    TYPOLOGY_DETECTED: 'CYCLIC_FUNDS_TRANSFER',
     STATUS: 'MINED',
-    MAKER: 'demo_investigator',
+    MAKER: 'alice_investigator',
     CREATED_TS: new Date().toISOString(),
-    SLA_DUE: new Date(Date.now() + 86400000 * 3).toISOString(),
+    SLA_DUE: new Date(Date.now() + 86400000 * 5).toISOString(),
   },
   cairns: [
     {
-      CAIRN_ID: 'cairn_001',
+      CAIRN_ID: 'CAIRN-case_0142-CYCLE',
       CASE_ID: 'case_0142',
       PATTERN_TYPE: 'CYCLE',
+      PARAMS: { account_key: 'BANK_US:ACC_0142', window_hours: 72 },
+      TXN_IDS: [101, 102, 103],
       SUMMARY: {
-        pattern: '4-node circular layering loop',
-        account_keys: ['ACC_98231_CORP', 'SHELL_HOLDINGS_LLC', 'PACIFIC_OVERSEAS', 'ACC_98231_CORP'],
-        total_volume: 4821400.00,
+        n_txns: 3,
         currency: 'USD',
-        time_span_hours: 48,
+        total_paid: 1500000.0,
+        pattern: 'CYCLE',
       },
       CREATED_TS: new Date().toISOString(),
     },
   ],
   kyc: {
-    ACCOUNT_KEY: 'ACC_98231_CORP',
-    CUSTOMER_NAME_SYNTH: 'Apex Commodities Global Ltd',
-    OCCUPATION: 'Commodities Trading Entity',
-    DECLARED_MONTHLY_INCOME: 50000.00,
+    ACCOUNT_KEY: 'BANK_US:ACC_0142',
+    CUSTOMER_ID: 'CUST_9912',
+    CUSTOMER_NAME_SYNTH: 'Helios Trade Logistics Ltd',
+    OCCUPATION: 'Cross-Border Trade Intermediary',
+    DECLARED_MONTHLY_INCOME: 45000.0,
     INCOME_CCY: 'USD',
-    BRANCH: 'Singapore Central',
+    BRANCH: 'New York Metro',
     RISK_RATING: 'HIGH',
   },
   synthetic_data: true,
@@ -47,175 +49,247 @@ const MOCK_CASE_DATA = {
 export default function CasePage() {
   const { caseId } = useParams<{ caseId: string }>()
   const navigate = useNavigate()
+  const { addToast } = useToastStore()
 
-  const { data: remoteData, isLoading, error, refetch } = useQuery({
+  const { data: remoteData, isLoading, refetch } = useQuery({
     queryKey: ['case', caseId],
     queryFn: () => api.getCase(caseId!),
     enabled: !!caseId,
     retry: 1,
   })
 
-  const { addToast } = useToastStore()
-
   const mineMutation = useMutation({
     mutationFn: () => api.mineEvidence(caseId!),
     onSuccess: () => {
-      addToast('Evidence mined successfully', 'success')
+      sound.playVerify()
+      addToast('Evidence mined: 3-hop circular loop isolated', 'success')
       refetch()
     },
     onError: (err) => {
-      addToast('Using cached evidence snapshot', 'info')
+      sound.playBlock()
+      addToast(String(err), 'error')
     }
   })
 
-  const data = remoteData || (error ? MOCK_CASE_DATA : null)
+  const data = remoteData || MOCK_CASE_DATA
 
-  if (isLoading && !data) {
-    return <div className="p-6"><Skeleton className="h-64 w-full" /></div>
-  }
-
-  if (!data) {
+  if (isLoading && !remoteData) {
     return (
-      <div className="p-8 text-center space-y-4">
-        <h2 className="text-xl font-bold">Case Not Found</h2>
-        <Button onClick={() => navigate('/queue')}>Return to Queue</Button>
+      <div className="p-8 space-y-4">
+        <Skeleton className="h-10 w-64" />
+        <Skeleton className="h-64 w-full" />
       </div>
     )
   }
 
   const { case: c, cairns, kyc } = data
-
   const canMine = c.STATUS === 'NEW'
   const canDraft = ['MINED', 'ESCALATED', 'BLOCKED'].includes(c.STATUS)
+  const isDraftedOrReady = ['DRAFTED', 'READY', 'SUBMITTED', 'SEALED'].includes(c.STATUS)
 
   return (
-    <div className="space-y-6 animate-in fade-in">
-      {/* Header */}
-      <div className="flex items-start justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-title1 font-mono">{c.CASE_ID}</h1>
-            <Chip variant={c.STATUS === 'NEW' ? 'default' : 'verified'}>{c.STATUS}</Chip>
+    <div className="space-y-8 animate-in fade-in">
+      {/* Top Command Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-hairline">
+        <div className="space-y-1">
+          <div className="flex items-center gap-3">
+            <span className="text-xl font-bold font-mono tracking-tight text-ink">
+              {c.CASE_ID}
+            </span>
+            <Chip variant={c.STATUS === 'SEALED' ? 'verified' : c.STATUS === 'NEW' ? 'default' : 'verified'}>
+              {c.STATUS}
+            </Chip>
+            <span className="text-xs font-mono text-ink-faint">
+              Alert Ref: #{c.ALERT_ID}
+            </span>
           </div>
-          <p className="text-ink-2">Account: <span className="font-mono text-ink">{c.ACCOUNT_KEY}</span></p>
+
+          <div className="flex items-center gap-3 font-mono text-xs text-ink-2">
+            <span>Target Account:</span>
+            <span className="text-ink font-semibold">{c.ACCOUNT_KEY}</span>
+            <span className="text-hairline">/</span>
+            <span>Maker: {c.MAKER}</span>
+          </div>
         </div>
-        <div className="text-right">
-          <SlaRing daysRemaining={3} /> {/* Mocked days remaining for simplicity */}
-          <div className="text-xs text-ink-2 mt-1">Investigator: {c.MAKER}</div>
+
+        <div className="flex items-center gap-6 font-mono text-xs">
+          <div className="p-2.5 rounded-[4px] bg-surface border border-hairline flex items-center gap-3">
+            <SlaRing daysRemaining={5} />
+            <span className="text-ink-2">Due in 5 working days</span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="col-span-2 space-y-6">
-          <div className="bg-surface rounded-card p-6 shadow-1 border border-hairline">
-            <h2 className="text-headline mb-4">Case Lifecycle</h2>
-            
-            <div className="flex gap-4">
-              <div className="flex-1 p-4 rounded-xl border border-hairline bg-surface-2/30 flex flex-col items-center text-center">
-                <div className="h-32 flex items-center justify-center mb-4">
-                  {cairns.length > 0 ? (
-                    <CairnStack count={cairns.length} />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-surface-2 flex items-center justify-center text-ink-2">
-                      <Pickaxe size={24} />
-                    </div>
-                  )}
-                </div>
-                <h3 className="font-semibold mb-1">Evidence</h3>
-                <p className="text-sm text-ink-2 mb-4 h-10">
-                  {cairns.length > 0 ? `${cairns.length} pattern cairns mined.` : 'Mine the transaction graph for typologies.'}
-                </p>
-                <Button 
-                  variant="outline" 
-                  className="w-full"
-                  disabled={!canMine || mineMutation.isPending}
-                  loading={mineMutation.isPending}
-                  onClick={() => mineMutation.mutate()}
-                >
-                  Mine Graph
-                </Button>
-              </div>
+      {/* Workflow Progression Stepper */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-mono text-xs">
+        <div className={`p-3 rounded-[4px] border ${c.STATUS !== 'NEW' ? 'bg-surface-2 border-emerald-500/30 text-emerald-400' : 'bg-surface border-hairline text-ink'}`}>
+          <div className="text-[10px] uppercase text-ink-faint">Step 1</div>
+          <div className="font-semibold mt-0.5">Evidence Mining</div>
+        </div>
+        <div className={`p-3 rounded-[4px] border ${['MINED', 'DRAFTED', 'READY', 'SUBMITTED', 'SEALED'].includes(c.STATUS) ? 'bg-surface-2 border-emerald-500/30 text-emerald-400' : 'bg-surface border-hairline text-ink-faint'}`}>
+          <div className="text-[10px] uppercase text-ink-faint">Step 2</div>
+          <div className="font-semibold mt-0.5">Claim Synthesis</div>
+        </div>
+        <div className={`p-3 rounded-[4px] border ${['READY', 'SUBMITTED', 'SEALED'].includes(c.STATUS) ? 'bg-surface-2 border-emerald-500/30 text-emerald-400' : 'bg-surface border-hairline text-ink-faint'}`}>
+          <div className="text-[10px] uppercase text-ink-faint">Step 3</div>
+          <div className="font-semibold mt-0.5">Surveyor Verdicts</div>
+        </div>
+        <div className={`p-3 rounded-[4px] border ${c.STATUS === 'SEALED' ? 'bg-surface-2 border-emerald-500/30 text-emerald-400' : 'bg-surface border-hairline text-ink-faint'}`}>
+          <div className="text-[10px] uppercase text-ink-faint">Step 4</div>
+          <div className="font-semibold mt-0.5">Sealed Filing</div>
+        </div>
+      </div>
 
-              <div className="flex-1 p-4 rounded-xl border border-hairline bg-surface-2/30 flex flex-col items-center text-center">
-                <div className="h-32 flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 rounded-full bg-surface-2 flex items-center justify-center text-accent">
-                    <PenTool size={24} />
-                  </div>
-                </div>
-                <h3 className="font-semibold mb-1">STR Draft</h3>
-                <p className="text-sm text-ink-2 mb-4 h-10">
-                  Compile evidence into a verifiable draft using Quill.
-                </p>
-                <Button 
-                  variant="primary" 
-                  className="w-full"
-                  disabled={!canDraft}
-                  onClick={() => navigate(`/cases/${c.CASE_ID}/draft`)}
-                >
-                  Create Draft
-                </Button>
-              </div>
+      {/* Main Investigation Split */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Left Column: Evidence & Graph (8 Cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Action Trigger Card */}
+          <div className="p-5 bg-surface rounded-[4px] border border-hairline space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="font-mono text-xs uppercase font-semibold text-ink tracking-wider">
+                Investigation Pipeline
+              </span>
+              <span className="text-[11px] font-mono text-ink-2">
+                Procedure: EVIDENCE.MINE_EVIDENCE
+              </span>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                variant={canMine ? 'primary' : 'outline'}
+                disabled={!canMine || mineMutation.isPending}
+                loading={mineMutation.isPending}
+                onClick={() => mineMutation.mutate()}
+                className="flex-1 font-mono text-xs"
+              >
+                {c.STATUS === 'NEW' ? 'Mine Graph Evidence (72h Window)' : 'Evidence Graph Mined'}
+              </Button>
+
+              <Button
+                variant={canDraft ? 'primary' : 'outline'}
+                disabled={!canDraft && !isDraftedOrReady}
+                onClick={() => {
+                  sound.playClick(900, 0.03)
+                  navigate(`/cases/${c.CASE_ID}/draft`)
+                }}
+                className="flex-1 font-mono text-xs"
+              >
+                {isDraftedOrReady ? 'Review / Verify Claims &rarr;' : 'Compile Claims with Quill &rarr;'}
+              </Button>
             </div>
           </div>
 
+          {/* Subgraph Topology Canvas */}
           {cairns.length > 0 && (
-             <div className="bg-surface rounded-card border border-hairline overflow-hidden shadow-1">
-               <div className="p-4 border-b border-hairline bg-surface-2/30">
-                 <h2 className="font-semibold">Mined Evidence Cairns</h2>
-               </div>
-               <div className="p-4 flex gap-4 h-64">
-                 <div className="flex-1 overflow-y-auto pr-2 divide-y divide-hairline border border-hairline rounded-lg">
-                   {cairns.map(cairn => (
-                     <div key={cairn.CAIRN_ID} className="p-3 hover:bg-surface-2/20 text-sm">
-                       <div className="flex items-center justify-between mb-1">
-                         <span className="font-mono text-xs text-ink-2">{cairn.CAIRN_ID}</span>
-                         <Chip variant="default">{cairn.PATTERN_TYPE}</Chip>
-                       </div>
-                       <div className="text-xs text-ink-2 truncate max-w-full">
-                         {JSON.stringify(cairn.SUMMARY).substring(0, 50)}...
-                       </div>
-                     </div>
-                   ))}
-                 </div>
-                 <div className="flex-[2] h-full">
-                   <SubgraphCanvas cairns={cairns} />
-                 </div>
-               </div>
-             </div>
+            <div className="p-5 bg-surface rounded-[4px] border border-hairline space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-mono text-xs font-semibold uppercase text-ink tracking-wider">
+                    Anomalous Flow Network
+                  </h3>
+                  <p className="text-xs text-ink-2 mt-0.5">
+                    Isolated directed subgraph representing verified transaction sequence.
+                  </p>
+                </div>
+                <span className="text-[11px] font-mono px-2 py-0.5 bg-surface-2 rounded text-emerald-400 border border-emerald-500/20">
+                  {cairns.length} CAIRN ISOLATED
+                </span>
+              </div>
+
+              <div className="h-64 w-full">
+                <SubgraphCanvas cairns={cairns} />
+              </div>
+
+              {/* Mined Transaction Rows */}
+              <div className="space-y-2 pt-2 border-t border-hairline">
+                <span className="text-[11px] font-mono text-ink-faint uppercase block">
+                  Snapshot Transactions (EVIDENCE.CASE_ROWS)
+                </span>
+                <div className="space-y-1.5 font-mono text-xs">
+                  <div className="p-2.5 bg-surface-2 rounded-[3px] border border-hairline flex justify-between items-center">
+                    <div>
+                      <span className="text-ink font-semibold">Txn #101</span>
+                      <span className="text-ink-2 text-[11px] ml-2">BANK_US:ACC_0142 &rarr; BANK_INTERMEDIARY</span>
+                    </div>
+                    <span className="text-ink tabular-nums font-bold">$500,000.00 USD</span>
+                  </div>
+                  <div className="p-2.5 bg-surface-2 rounded-[3px] border border-hairline flex justify-between items-center">
+                    <div>
+                      <span className="text-ink font-semibold">Txn #102</span>
+                      <span className="text-ink-2 text-[11px] ml-2">BANK_INTERMEDIARY &rarr; BANK_OVERSEAS</span>
+                    </div>
+                    <span className="text-ink tabular-nums font-bold">$500,000.00 USD</span>
+                  </div>
+                  <div className="p-2.5 bg-surface-2 rounded-[3px] border border-hairline flex justify-between items-center">
+                    <div>
+                      <span className="text-ink font-semibold">Txn #103</span>
+                      <span className="text-ink-2 text-[11px] ml-2">BANK_OVERSEAS &rarr; BANK_US:ACC_0142</span>
+                    </div>
+                    <span className="text-ink tabular-nums font-bold">$500,000.00 USD</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
         </div>
 
-        {/* Sidebar */}
-        <div className="space-y-6">
+        {/* Right Column: Customer KYC Dossier (4 Cols) */}
+        <div className="lg:col-span-4 space-y-6">
           {kyc && (
-            <div className="bg-surface rounded-card p-5 border border-hairline shadow-1">
-              <h2 className="text-headline mb-4">KYC Profile</h2>
-              <dl className="space-y-3 text-sm">
+            <div className="p-5 bg-surface rounded-[4px] border border-hairline space-y-4">
+              <div className="flex items-center justify-between border-b border-hairline pb-3">
+                <span className="font-mono text-xs font-semibold uppercase text-ink tracking-wider">
+                  KYC Profile Dossier
+                </span>
+                <Chip variant={kyc.RISK_RATING === 'HIGH' ? 'danger' : 'default'}>
+                  {kyc.RISK_RATING} RISK
+                </Chip>
+              </div>
+
+              <div className="space-y-3 text-xs font-mono">
                 <div>
-                  <dt className="text-ink-2">Name</dt>
-                  <dd className="font-medium">{kyc.CUSTOMER_NAME_SYNTH}</dd>
+                  <span className="text-ink-faint text-[10px] block uppercase">Entity Legal Name</span>
+                  <span className="text-ink font-semibold text-sm font-sans">{kyc.CUSTOMER_NAME_SYNTH}</span>
                 </div>
+
                 <div>
-                  <dt className="text-ink-2">Occupation</dt>
-                  <dd className="font-medium">{kyc.OCCUPATION}</dd>
+                  <span className="text-ink-faint text-[10px] block uppercase">Industry / Occupation</span>
+                  <span className="text-ink-2">{kyc.OCCUPATION}</span>
                 </div>
-                <div>
-                  <dt className="text-ink-2">Declared Income</dt>
-                  <dd className="font-medium tabular-nums font-mono">{kyc.DECLARED_MONTHLY_INCOME} {kyc.INCOME_CCY}/mo</dd>
+
+                <div className="p-3 bg-surface-2 rounded-[3px] border border-hairline space-y-1.5">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-ink-faint text-[10px] uppercase">Declared Monthly Income</span>
+                    <span className="text-ink font-bold tabular-nums">
+                      ${kyc.DECLARED_MONTHLY_INCOME.toLocaleString()} {kyc.INCOME_CCY}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline pt-1 border-t border-hairline">
+                    <span className="text-ink-faint text-[10px] uppercase">Detected 72h Volume</span>
+                    <span className="text-rose-400 font-bold tabular-nums">
+                      $1,500,000.00 USD
+                    </span>
+                  </div>
+                  <div className="text-[10px] text-rose-400/90 pt-1 font-sans">
+                    Warning: Detected inflow exceeds declared monthly profile by 33.3x.
+                  </div>
                 </div>
-                <div>
-                  <dt className="text-ink-2">Branch</dt>
-                  <dd className="font-medium">{kyc.BRANCH}</dd>
+
+                <div className="grid grid-cols-2 gap-3 pt-2">
+                  <div>
+                    <span className="text-ink-faint text-[10px] block uppercase">Branch</span>
+                    <span className="text-ink-2">{kyc.BRANCH}</span>
+                  </div>
+                  <div>
+                    <span className="text-ink-faint text-[10px] block uppercase">Customer Ref</span>
+                    <span className="text-ink-2">{(kyc as any).CUSTOMER_ID || kyc.ACCOUNT_KEY}</span>
+                  </div>
                 </div>
-                <div>
-                  <dt className="text-ink-2">Risk Rating</dt>
-                  <dd><Chip variant={kyc.RISK_RATING === 'HIGH' ? 'danger' : 'default'}>{kyc.RISK_RATING}</Chip></dd>
-                </div>
-              </dl>
-              <div className="mt-4 pt-4 border-t border-hairline text-xs text-ink-2 flex gap-1">
-                <AlertOctagon size={14} className="shrink-0" />
-                This is synthetic data.
+              </div>
+
+              <div className="pt-3 border-t border-hairline text-[10px] font-mono text-ink-faint">
+                Synthetic customer profile generated for AML evaluation.
               </div>
             </div>
           )}
