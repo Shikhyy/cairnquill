@@ -15,6 +15,9 @@ build/
 .pytest_cache/
 htmlcov/
 .coverage
+*.db
+*.sqlite
+*.sqlite3
 
 # Node / Frontend
 node_modules/

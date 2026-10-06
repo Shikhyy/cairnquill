@@ -42,7 +42,16 @@ async def run_planted_errors(
 
     # Import eval script
     try:
-        from eval.planted_errors import run_planted_error_suite
+        try:
+            from eval.planted_errors import run_planted_error_suite
+        except ModuleNotFoundError:
+            import sys
+            from pathlib import Path
+            repo_root = Path(__file__).resolve().parent.parent.parent.parent.parent
+            if str(repo_root) not in sys.path:
+                sys.path.insert(0, str(repo_root))
+            from eval.planted_errors import run_planted_error_suite
+
         metrics = run_planted_error_suite(conn)
     except Exception as exc:
         logger.exception("Planted error suite failed")

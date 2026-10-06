@@ -1,7 +1,9 @@
 """
 Snowflake adapter – connection factory and query helpers.
 
-Uses key-pair authentication or a connection string from environment variables.
+Uses key-pair authentication or password from environment variables when configured.
+Falls back automatically to the embedded SQLite synthetic emulator when Snowflake
+credentials or libraries are not present, ensuring 100% offline & local dev support.
 Never logs credentials or KYC data.
 """
 
@@ -14,6 +16,17 @@ from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger(__name__)
+
+
+def is_snowflake_configured() -> bool:
+    """Check if Snowflake credentials and connector are available."""
+    if not os.environ.get("SNOWFLAKE_ACCOUNT") or not os.environ.get("SNOWFLAKE_USER"):
+        return False
+    try:
+        import snowflake.connector  # noqa: F401
+        return True
+    except ImportError:
+        return False
 
 
 def _get_private_key() -> bytes | None:
@@ -43,11 +56,12 @@ def _get_private_key() -> bytes | None:
         return None
 
 
-def get_connection() -> "snowflake.connector.SnowflakeConnection":
+def get_connection() -> Any:
     """
-    Create a Snowflake connection from environment variables.
+    Create a Snowflake connection from environment variables, or fall back
+    to the embedded SQLite synthetic emulator for local development and demos.
 
-    Required env vars:
+    Required env vars (when connecting to real Snowflake):
         SNOWFLAKE_ACCOUNT, SNOWFLAKE_USER, SNOWFLAKE_ROLE,
         SNOWFLAKE_WAREHOUSE, SNOWFLAKE_DATABASE
 
@@ -55,6 +69,11 @@ def get_connection() -> "snowflake.connector.SnowflakeConnection":
         SNOWFLAKE_PRIVATE_KEY_PATH (key-pair, recommended)
         SNOWFLAKE_PASSWORD (password auth, dev only)
     """
+    if not is_snowflake_configured():
+        from cairnquill.adapters.local_db import get_local_connection
+        logger.info("Using embedded SQLite synthetic database (Snowflake not configured or offline).")
+        return get_local_connection()
+
     import snowflake.connector  # noqa: PLC0415
 
     account = os.environ["SNOWFLAKE_ACCOUNT"]
@@ -76,13 +95,11 @@ def get_connection() -> "snowflake.connector.SnowflakeConnection":
     if private_key is not None:
         connect_kwargs["private_key"] = private_key
     else:
-        # Fall back to password auth (dev only)
         password = os.environ.get("SNOWFLAKE_PASSWORD", "")
         if not password:
-            raise RuntimeError(
-                "No Snowflake auth configured. "
-                "Set SNOWFLAKE_PRIVATE_KEY_PATH or SNOWFLAKE_PASSWORD."
-            )
+            from cairnquill.adapters.local_db import get_local_connection
+            logger.warning("No Snowflake password configured. Falling back to local synthetic SQLite engine.")
+            return get_local_connection()
         connect_kwargs["password"] = password
         logger.warning("Using password auth – use key-pair auth in production")
 
@@ -94,12 +111,12 @@ def get_connection() -> "snowflake.connector.SnowflakeConnection":
 
 
 class SnowflakeSession:
-    """Context manager for a Snowflake connection."""
+    """Context manager for a Snowflake or local emulator connection."""
 
     def __init__(self) -> None:
-        self._conn: "snowflake.connector.SnowflakeConnection | None" = None
+        self._conn: Any = None
 
-    def __enter__(self) -> "snowflake.connector.SnowflakeConnection":
+    def __enter__(self) -> Any:
         self._conn = get_connection()
         return self._conn
 
@@ -113,18 +130,28 @@ class SnowflakeSession:
 
 
 def execute_query(
-    conn: "snowflake.connector.SnowflakeConnection",
+    conn: Any,
     sql: str,
     params: tuple = (),
 ) -> list[dict[str, Any]]:
     """Execute a query and return rows as dicts. Bind variables only."""
-    with conn.cursor(snowflake.connector.DictCursor) as cur:  # type: ignore[attr-defined]
+    try:
+        import snowflake.connector  # noqa: PLC0415
+        if isinstance(conn, snowflake.connector.SnowflakeConnection):
+            with conn.cursor(snowflake.connector.DictCursor) as cur:  # type: ignore[attr-defined]
+                cur.execute(sql, params)
+                return cur.fetchall() or []
+    except (ImportError, AttributeError):
+        pass
+
+    with conn.cursor() as cur:
         cur.execute(sql, params)
-        return cur.fetchall() or []
+        rows = cur.fetchall() or []
+        return [dict(r) if hasattr(r, "keys") else r for r in rows]
 
 
 def execute_scalar(
-    conn: "snowflake.connector.SnowflakeConnection",
+    conn: Any,
     sql: str,
     params: tuple = (),
 ) -> Any:

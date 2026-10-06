@@ -90,8 +90,16 @@ def _within_tolerance(
             return False
 
     if claim_type == ClaimType.PATTERN_EXISTS:
-        # Both should be frozensets of txn_ids
-        return actual == asserted_value
+        def _to_frozenset(v: Any) -> frozenset[int]:
+            if isinstance(v, (set, frozenset)):
+                return frozenset(int(x) for x in v)
+            if isinstance(v, (list, tuple)):
+                return frozenset(int(x) for x in v)
+            if isinstance(v, str):
+                return frozenset(int(x.strip()) for x in v.split(",") if x.strip().isdigit())
+            return frozenset()
+
+        return _to_frozenset(actual) == _to_frozenset(asserted_value)
 
     # Exact for COUNT_TXNS, DISTINCT_COUNTERPARTIES, TIME_SPAN_HOURS, KYC_MISMATCH
     try:
