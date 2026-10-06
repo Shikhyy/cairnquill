@@ -110,6 +110,10 @@ class CairnquillClaim(BaseModel):
         return self.params.currency or (self.asserted.currency if self.asserted else None)
 
 
+# Alias for backwards compatibility and ergonomics
+Claim = CairnquillClaim
+
+
 # ── Verdict result model ──────────────────────────────────────────────────────
 
 
