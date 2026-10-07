@@ -4,8 +4,8 @@ import { useMutation } from '@tanstack/react-query'
 import { api, Claim, VerdictItem } from '@/lib/api'
 import { Button, ClaimCard, Chip } from '@/components/ui'
 import { 
-  CheckCircle2, AlertTriangle, ArrowRight, RefreshCcw, 
-  Terminal, ShieldAlert, Cpu, Sparkles, ChevronRight, FileText, Check, Lock
+  AlertTriangle, ArrowRight, RefreshCcw, 
+  ChevronRight, FileText, Check, Lock
 } from 'lucide-react'
 import { useToastStore } from '@/lib/toast'
 import { sound } from '@/lib/soundEngine'
@@ -150,13 +150,13 @@ export default function DraftPage() {
   if (isCompiling && !effectiveDraft) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
-        <div className="relative">
+        <div className="relative flex items-center justify-center w-16 h-16">
           <div className="w-16 h-16 rounded-full border border-accent/20 border-t-accent animate-spin" />
-          <Cpu className="absolute inset-0 m-auto text-accent" size={24} />
+          <div className="w-3 h-3 rounded-full bg-accent animate-pulse shadow-[0_0_12px_rgba(245,158,11,0.8)]" />
         </div>
         <div className="text-center space-y-2">
-          <div className="text-xs font-mono text-ink-2 uppercase tracking-widest">Compiler Pipeline Active</div>
-          <h2 className="text-xl font-medium text-ink">Quill AST Synthesis & Surveyor Verification</h2>
+          <div className="text-xs font-mono text-accent uppercase tracking-widest font-semibold">Compiler Pipeline Active</div>
+          <h2 className="text-xl font-medium text-ink font-display">Quill AST Synthesis &amp; Surveyor Verification</h2>
           <p className="text-xs text-ink-faint font-mono max-w-md">
             Executing deterministic SQL templates against Snowflake evidence snapshot for {caseId}...
           </p>
@@ -422,7 +422,7 @@ export default function DraftPage() {
           <div className="bg-surface p-5 rounded-[4px] border border-hairline shadow-1 space-y-5">
             <div className="flex items-center justify-between border-b border-hairline pb-3">
               <h2 className="text-xs font-mono font-bold text-ink uppercase tracking-wider flex items-center gap-2">
-                <Cpu size={14} className="text-accent" />
+                <span className="w-2 h-2 rounded-full bg-accent ring-2 ring-accent/30" />
                 Surveyor Verification HUD
               </h2>
               <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-2 text-ink-2 border border-hairline">
@@ -498,7 +498,7 @@ export default function DraftPage() {
             {/* Submission Gate */}
             <div className="pt-2 border-t border-hairline space-y-3">
               <Button 
-                className="w-full text-xs font-semibold py-2.5"
+                className="w-full text-xs font-semibold py-2.5 font-mono"
                 disabled={blocked || submitMutation.isPending}
                 loading={submitMutation.isPending}
                 onClick={() => {
@@ -512,7 +512,7 @@ export default function DraftPage() {
 
               {blocked && (
                 <p className="text-[11px] font-mono text-center text-rose-400/90 leading-tight">
-                  <ShieldAlert size={12} className="inline mr-1" />
+                  <span className="inline-block text-rose-400 mr-1 font-bold">●</span>
                   Deterministic zero-drift rule violated. All LLM hallucinations must be repaired before dual-signoff.
                 </p>
               )}
@@ -523,7 +523,7 @@ export default function DraftPage() {
           <div className="bg-surface p-5 rounded-[4px] border border-hairline space-y-4">
             <div className="flex items-center justify-between border-b border-hairline pb-2.5">
               <h3 className="text-xs font-bold font-mono text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles size={14} /> Adversarial Error Injection
+                <span className="font-mono text-accent text-sm">◈</span> Adversarial Mutation Suite
               </h3>
               <span className="text-[10px] font-mono text-ink-faint">DEMO BENCHMARK</span>
             </div>

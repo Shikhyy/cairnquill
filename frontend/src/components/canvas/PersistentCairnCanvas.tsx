@@ -2,9 +2,9 @@ import React, { useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
 /**
- * Persistent 3D WebGL Canvas
- * Renders an abstract, mathematically balanced Cairn (stacked obsidian monoliths)
- * with custom GLSL rim shaders and dynamic camera choreography responding to scroll & mouse.
+ * Persistent 3D WebGL Canvas – Bohemian Lit-Up Artifact
+ * Renders an abstract, mathematically balanced Cairn (stacked basalt monoliths + radiant amber keystone)
+ * with internal point lighting, desert sun/terracotta rim lighting, and luminous ember particles.
  * 
  * Performance Invariant:
  * - DPR clamped to Math.min(window.devicePixelRatio, 2)
@@ -37,7 +37,7 @@ export function PersistentCairnCanvas() {
     renderer.setSize(window.innerWidth, window.innerHeight)
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     renderer.toneMapping = THREE.ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.2
+    renderer.toneMappingExposure = 1.35
     container.appendChild(renderer.domElement)
 
     // Cairn Group (The Stacked Proof Stones)
@@ -47,36 +47,48 @@ export function PersistentCairnCanvas() {
     // Procedural Stone Geometries (4 Balanced Monoliths)
     const stoneConfigs = [
       // Base Foundation Stone
-      { radius: 3.2, height: 1.4, segments: 7, y: -3.8, rotY: 0.2 },
+      { radius: 3.2, height: 1.4, segments: 7, y: -3.8, rotY: 0.2, isKeystone: false },
       // Mid Lower Stone
-      { radius: 2.5, height: 1.2, segments: 6, y: -1.8, rotY: 0.8 },
-      // Mid Upper Keystone
-      { radius: 1.8, height: 1.0, segments: 8, y: -0.2, rotY: 1.5 },
-      // Top Beacon Monolith (balanced on edge)
-      { radius: 1.1, height: 1.3, segments: 5, y: 1.5, rotY: 2.4 },
+      { radius: 2.5, height: 1.2, segments: 6, y: -1.8, rotY: 0.8, isKeystone: false },
+      // Mid Upper Stone
+      { radius: 1.8, height: 1.0, segments: 8, y: -0.2, rotY: 1.5, isKeystone: false },
+      // Top Beacon Monolith (LIT UP KEYSTONE)
+      { radius: 1.15, height: 1.35, segments: 5, y: 1.5, rotY: 2.4, isKeystone: true },
     ]
 
-    // Custom Shaders for Obsidian Material with Iridescent Rim Lighting
-    const customMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x0d111a,
-      roughness: 0.25,
-      metalness: 0.85,
+    // Bohemian Shaders: Warm Basalt Obsidian for Base Stones
+    const basaltMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0x181410,
+      roughness: 0.32,
+      metalness: 0.82,
       clearcoat: 0.65,
-      clearcoatRoughness: 0.2,
+      clearcoatRoughness: 0.25,
       reflectivity: 0.85,
     })
 
+    // Luminous Illuminated Sun-Keystone Material
+    const keystoneMaterial = new THREE.MeshPhysicalMaterial({
+      color: 0xd97706,
+      emissive: 0xf59e0b,
+      emissiveIntensity: 0.75,
+      roughness: 0.18,
+      metalness: 0.7,
+      clearcoat: 0.9,
+      clearcoatRoughness: 0.15,
+      reflectivity: 0.95,
+    })
+
+    // Delicate Warm Amber Wireframe
     const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
+      color: 0xf59e0b,
       wireframe: true,
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.15,
     })
 
     const stoneMeshes: THREE.Mesh[] = []
 
     stoneConfigs.forEach((cfg) => {
-      // Cylinder with randomized angular vertices simulates hand-chiselled stone
       const geom = new THREE.CylinderGeometry(cfg.radius * 0.85, cfg.radius, cfg.height, cfg.segments)
       
       // Jitter vertices subtly for authentic geological stone faceting
@@ -90,7 +102,8 @@ export function PersistentCairnCanvas() {
       }
       geom.computeVertexNormals()
 
-      const mesh = new THREE.Mesh(geom, customMaterial)
+      const mat = cfg.isKeystone ? keystoneMaterial : basaltMaterial
+      const mesh = new THREE.Mesh(geom, mat)
       const wire = new THREE.Mesh(geom, wireframeMaterial)
       mesh.add(wire)
 
@@ -101,42 +114,49 @@ export function PersistentCairnCanvas() {
       stoneMeshes.push(mesh)
     })
 
-    // Ambient particles (Verifiable Claim Tokens floating subtly)
-    const particleCount = 120
+    // Ambient Bohemian Firefly Embers (160 Glowing Dust Tokens)
+    const particleCount = 160
     const particleGeometry = new THREE.BufferGeometry()
     const particlePositions = new Float32Array(particleCount * 3)
 
     for (let i = 0; i < particleCount * 3; i += 3) {
-      particlePositions[i] = (Math.random() - 0.5) * 26
-      particlePositions[i + 1] = (Math.random() - 0.5) * 20
-      particlePositions[i + 2] = (Math.random() - 0.5) * 16
+      particlePositions[i] = (Math.random() - 0.5) * 28
+      particlePositions[i + 1] = (Math.random() - 0.5) * 22
+      particlePositions[i + 2] = (Math.random() - 0.5) * 18
     }
 
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3))
 
     const particleMaterial = new THREE.PointsMaterial({
-      color: 0x38bdf8,
-      size: 0.05,
+      color: 0xfbbf24,
+      size: 0.065,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.65,
       blending: THREE.AdditiveBlending,
     })
 
     const particleSystem = new THREE.Points(particleGeometry, particleMaterial)
     scene.add(particleSystem)
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45)
+    // ── Bohemian Lighting Rig: Warm Radiant Hearth ───────────────────────────
+    
+    // Internal Artifact Point Light (Emanates glowing amber halo from the keystone)
+    const keystoneLight = new THREE.PointLight(0xf59e0b, 5.0, 26, 1.8)
+    keystoneLight.position.set(0, 1.5, 0.6)
+    cairnGroup.add(keystoneLight)
+
+    // Soft Ambient Warm Hearth Light
+    const ambientLight = new THREE.AmbientLight(0x28201a, 1.6)
     scene.add(ambientLight)
 
-    // Directional Key Light (Cold Blue from Top Left)
-    const keyLight = new THREE.DirectionalLight(0x38bdf8, 2.2)
-    keyLight.position.set(-8, 12, 10)
+    // Key Directional Light (Desert Sun Gold from Top Left)
+    const keyLight = new THREE.DirectionalLight(0xfbbf24, 2.8)
+    keyLight.position.set(-8, 14, 12)
     scene.add(keyLight)
 
-    // Subtle Rim Light (Emerald from Bottom Right)
-    const rimLight = new THREE.DirectionalLight(0x10b981, 1.4)
-    rimLight.position.set(8, -6, -5)
+    // Rim Directional Light (Bohemian Terracotta Sunset from Bottom Right)
+    const rimLight = new THREE.DirectionalLight(0xe07a5f, 2.2)
+    rimLight.position.set(8, -6, -6)
     scene.add(rimLight)
 
     // Mouse Tracking with smooth Lerp
@@ -172,25 +192,29 @@ export function PersistentCairnCanvas() {
 
       const elapsedTime = clock.getElapsedTime()
 
-      // Lerp mouse
+      // Lerp mouse coordinates
       mouse.x += (mouse.targetX - mouse.x) * 0.05
       mouse.y += (mouse.targetY - mouse.y) * 0.05
 
       // Subtle group rotation and parallax
-      cairnGroup.rotation.y = elapsedTime * 0.08 + mouse.x * 0.35
+      cairnGroup.rotation.y = elapsedTime * 0.09 + mouse.x * 0.35
       cairnGroup.rotation.x = 0.15 + mouse.y * 0.15
       
       // Position shifts subtly based on page scroll
       cairnGroup.position.y = (scrollY * 0.003)
       cairnGroup.position.x = 4.2 - (mouse.x * 0.5)
 
+      // Keystone breathing light pulse
+      keystoneLight.intensity = 4.5 + Math.sin(elapsedTime * 2.0) * 0.8
+
       // Individual stone micro-float (natural balance simulation)
       stoneMeshes.forEach((mesh, index) => {
-        mesh.rotation.y += Math.sin(elapsedTime * 0.5 + index) * 0.001
+        mesh.rotation.y += Math.sin(elapsedTime * 0.5 + index) * 0.0012
       })
 
-      // Particle drift
-      particleSystem.rotation.y = elapsedTime * 0.02
+      // Particle drift (gentle swirling convection)
+      particleSystem.rotation.y = elapsedTime * 0.03
+      particleSystem.rotation.x = Math.sin(elapsedTime * 0.2) * 0.05
 
       renderer.render(scene, camera)
     }
@@ -212,7 +236,8 @@ export function PersistentCairnCanvas() {
         m.geometry.dispose()
       })
       particleGeometry.dispose()
-      customMaterial.dispose()
+      basaltMaterial.dispose()
+      keystoneMaterial.dispose()
       wireframeMaterial.dispose()
       particleMaterial.dispose()
       renderer.dispose()

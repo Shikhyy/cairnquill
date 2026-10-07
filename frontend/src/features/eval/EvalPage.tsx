@@ -1,11 +1,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { api, EvalRun } from '@/lib/api'
-import { Button, Skeleton, Chip } from '@/components/ui'
-import { 
-  Activity, Target, Zap, ShieldCheck, Play, 
-  CheckCircle2, AlertTriangle, Layers, Cpu, Check, RefreshCw
-} from 'lucide-react'
+import { Button, Skeleton } from '@/components/ui'
 import { useAppStore } from '@/lib/store'
 import { useToastStore } from '@/lib/toast'
 import { sound } from '@/lib/soundEngine'
@@ -96,17 +92,17 @@ export default function EvalPage() {
       {/* ── Page Header & Telemetry ────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-hairline pb-5">
         <div>
-          <div className="text-xs font-mono text-ink-faint uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-            <Cpu size={14} className="text-accent" />
-            <span>Surveyor Benchmark & Hallucination Resistance Matrix</span>
+          <div className="text-xs font-mono text-accent uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-semibold">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span>Surveyor Benchmark &amp; Hallucination Resistance Matrix</span>
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-ink flex items-center gap-3">
+          <h1 className="text-2xl font-bold tracking-tight text-ink font-display flex items-center gap-3">
             Evaluation Scoreboard
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-surface-2 text-ink-2 border border-hairline font-normal">
               PLANTED_ERROR_HARNESS
             </span>
           </h1>
-          <p className="text-xs text-ink-2 max-w-xl mt-1">
+          <p className="text-xs text-ink-2 max-w-xl mt-1 leading-relaxed">
             Automated adversarial mutation harness injecting drift, phantom entities, and altered time windows into Quill drafts to measure mathematical blocking accuracy.
           </p>
         </div>
@@ -115,9 +111,9 @@ export default function EvalPage() {
           <Button 
             onClick={handleRunSuite} 
             loading={isRunning || runMutation.isPending}
-            className="text-xs font-mono px-4 py-2"
+            className="text-xs font-mono px-4 py-2 font-semibold"
           >
-            <Play size={13} className="mr-1.5" /> Execute Test Harness
+            Execute Test Harness &rarr;
           </Button>
         </div>
       </div>
@@ -126,7 +122,7 @@ export default function EvalPage() {
       {!isAuthorized && (
         <div className="p-3.5 bg-surface-2/40 border border-hairline rounded-[4px] flex items-center justify-between text-xs font-mono">
           <div className="flex items-center gap-2 text-ink-2">
-            <ShieldCheck size={14} className="text-accent" />
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
             <span>
               Currently viewing in read-only telemetry mode (<span className="text-ink font-semibold uppercase">{role}</span>).
             </span>
@@ -150,8 +146,8 @@ export default function EvalPage() {
         {/* Metric 1: Catch Rate */}
         <div className="bg-surface p-5 rounded-[4px] border border-hairline shadow-1 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono text-ink-faint uppercase">Adversarial Catch Rate</span>
-            <Target size={16} className="text-emerald-400" />
+            <span className="text-[10px] font-mono text-ink-faint uppercase font-medium">Adversarial Catch Rate</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">OPTIMAL</span>
           </div>
           <div className="text-3xl font-bold font-mono text-emerald-400 tabular-nums">
             {(metrics.catch_rate * 100).toFixed(1)}%
@@ -165,8 +161,8 @@ export default function EvalPage() {
         {/* Metric 2: False Block Rate */}
         <div className="bg-surface p-5 rounded-[4px] border border-hairline shadow-1 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono text-ink-faint uppercase">False-Block Rate</span>
-            <Activity size={16} className="text-accent" />
+            <span className="text-[10px] font-mono text-ink-faint uppercase font-medium">False-Block Rate</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-accent/10 text-accent border border-accent/20 font-semibold">ZERO DRIFT</span>
           </div>
           <div className="text-3xl font-bold font-mono text-ink tabular-nums">
             {(metrics.false_block_rate * 100).toFixed(1)}%
@@ -180,8 +176,8 @@ export default function EvalPage() {
         {/* Metric 3: Verification Latency */}
         <div className="bg-surface p-5 rounded-[4px] border border-hairline shadow-1 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono text-ink-faint uppercase">Surveyor Latency</span>
-            <Zap size={16} className="text-amber-400" />
+            <span className="text-[10px] font-mono text-ink-faint uppercase font-medium">Surveyor Latency</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-2 text-ink-2 border border-hairline font-semibold">REALTIME</span>
           </div>
           <div className="text-3xl font-bold font-mono text-ink tabular-nums">
             {metrics.latency_ms || 412}ms
@@ -195,15 +191,15 @@ export default function EvalPage() {
         {/* Metric 4: Evaluated Mutations */}
         <div className="bg-surface p-5 rounded-[4px] border border-hairline shadow-1 space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-[10px] font-mono text-ink-faint uppercase">Mutations Planted</span>
-            <Layers size={16} className="text-purple-400" />
+            <span className="text-[10px] font-mono text-ink-faint uppercase font-medium">Mutations Planted</span>
+            <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-2 text-ink-2 border border-hairline font-semibold">COVERAGE</span>
           </div>
           <div className="text-3xl font-bold font-mono text-ink tabular-nums">
             {metrics.total_mutations || 120}
           </div>
           <div className="flex items-center justify-between text-[11px] font-mono text-ink-faint pt-1 border-t border-hairline">
             <span>5 Claim Types</span>
-            <span className="text-purple-400 font-semibold">Complete Coverage</span>
+            <span className="text-accent font-semibold">Complete Coverage</span>
           </div>
         </div>
 
@@ -213,7 +209,7 @@ export default function EvalPage() {
       <div className="bg-surface rounded-[4px] border border-hairline p-5 space-y-4">
         <div className="flex items-center justify-between border-b border-hairline pb-3">
           <h2 className="text-xs font-mono font-bold text-ink uppercase tracking-wider flex items-center gap-2">
-            <ShieldCheck size={14} className="text-emerald-400" />
+            <span className="w-2 h-2 rounded-full bg-accent" />
             Claim-Type Verification Matrix (Zero-Drift SLA)
           </h2>
           <span className="text-[10px] font-mono text-ink-faint">

@@ -13,6 +13,7 @@ export default {
         'ink-2': 'var(--ink-2)',
         hairline: 'var(--hairline)',
         accent: 'var(--accent)',
+        terracotta: 'var(--terracotta)',
         verified: 'var(--verified)',
         contradicted: 'var(--contradicted)',
         unsupported: 'var(--unsupported)',

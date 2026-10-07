@@ -2,10 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { Button } from '@/components/ui'
-import { 
-  Search, BookOpen, ExternalLink, Terminal, 
-  Cpu, ArrowRight, CornerDownLeft, Sparkles, ShieldCheck
-} from 'lucide-react'
+import { CornerDownLeft } from 'lucide-react'
 import { sound } from '@/lib/soundEngine'
 
 const SUGGESTED_QUERIES = [
@@ -99,11 +96,11 @@ export default function AskPage() {
       {/* ── Terminal Header ──────────────────────────────────────────────── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-3">
         <div>
-          <div className="text-[10px] font-mono text-ink-faint uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <Cpu size={13} className="text-accent" />
+          <div className="text-[10px] font-mono text-accent uppercase tracking-wider mb-1 font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-accent" />
             <span>Snowflake Cortex Vector Search</span>
           </div>
-          <h1 className="text-xl font-semibold tracking-tight text-ink flex items-center gap-2">
+          <h1 className="text-xl font-bold tracking-tight text-ink font-display flex items-center gap-2">
             Regulatory Intelligence Terminal
             <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-2 text-emerald-400 border border-emerald-500/20 font-medium">
               INDEX_PMLA_FATF_ONLINE
@@ -119,8 +116,8 @@ export default function AskPage() {
 
       {/* ── Quick Query Suggestions Bar ───────────────────────────────────── */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs font-mono">
-        <span className="text-[10px] uppercase text-ink-faint shrink-0 flex items-center gap-1">
-          <Sparkles size={11} className="text-accent" /> Presets:
+        <span className="text-[10px] uppercase text-ink-faint shrink-0 font-semibold">
+          Presets:
         </span>
         {SUGGESTED_QUERIES.map((sq, i) => (
           <button
@@ -156,7 +153,7 @@ export default function AskPage() {
                 <div className="p-4 bg-surface rounded-[4px] border border-hairline/80 space-y-3">
                   <div className="flex items-center justify-between text-[10px] font-mono text-ink-faint border-b border-hairline pb-2">
                     <span className="flex items-center gap-1.5 text-accent font-semibold uppercase">
-                      <Terminal size={12} /> CORTEX COMPLIANCE ENGINE
+                      <span className="w-1.5 h-1.5 rounded-full bg-accent" /> CORTEX COMPLIANCE ENGINE
                     </span>
                     <span>SOURCE: {msg.source || 'SNOWFLAKE_VECTOR_STORE'}</span>
                   </div>
@@ -168,9 +165,9 @@ export default function AskPage() {
                   {/* Grounded Legal Citations */}
                   {msg.citations && msg.citations.length > 0 && (
                     <div className="pt-3 border-t border-hairline space-y-2 font-mono">
-                      <div className="text-[10px] uppercase text-ink-faint flex items-center gap-1.5">
-                        <BookOpen size={11} className="text-accent" />
-                        Grounded Legal Citations ({msg.citations.length})
+                      <div className="text-[10px] uppercase text-accent font-semibold flex items-center gap-1.5">
+                        <span>§</span>
+                        <span>Grounded Legal Citations ({msg.citations.length})</span>
                       </div>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -206,7 +203,7 @@ export default function AskPage() {
           {askMutation.isPending && (
             <div className="p-4 bg-surface rounded-[4px] border border-hairline space-y-2 font-mono text-xs animate-pulse">
               <div className="flex items-center gap-2 text-accent">
-                <Cpu size={14} className="animate-spin" />
+                <span className="w-2 h-2 rounded-full bg-accent animate-ping" />
                 <span>Cortex embedding vector search executing against regulatory index...</span>
               </div>
             </div>
