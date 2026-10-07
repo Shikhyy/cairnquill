@@ -7,7 +7,6 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
   size?: 'sm' | 'md' | 'lg'
   loading?: boolean
-  magnetic?: number
 }
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -19,48 +18,39 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     children, 
     disabled, 
     onClick, 
-    onMouseEnter,
-    magnetic = 0.3,
     ...props 
   }, ref) => {
     const variants = {
-      primary: 'bg-white text-black hover:bg-zinc-200 font-semibold border border-white/20 shadow-[0_1px_2px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.6)] active:scale-[0.98] transition-all',
-      secondary: 'bg-surface-2 text-ink hover:bg-surface-3 hover:text-white border border-hairline hover:border-hairline-bold shadow-inset active:scale-[0.98] transition-all',
-      outline: 'border border-hairline bg-surface hover:bg-surface-2 text-ink hover:border-accent/40 active:scale-[0.98] transition-all',
-      ghost: 'bg-transparent hover:bg-surface-2 text-ink-2 hover:text-ink transition-colors',
-      danger: 'bg-rose-500/15 text-rose-300 hover:bg-rose-500/25 border border-rose-500/30 active:scale-[0.98] transition-all',
+      primary: 'bg-white text-zinc-950 hover:bg-zinc-100 shadow-[0_1px_2px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.8)] border border-white/20 active:scale-[0.98]',
+      secondary: 'bg-zinc-900 text-zinc-100 hover:bg-zinc-800 hover:text-white border border-zinc-700/80 shadow-[0_1px_2px_rgba(0,0,0,0.4)] active:scale-[0.98]',
+      outline: 'bg-zinc-950/60 text-zinc-300 hover:text-white hover:bg-zinc-900 border border-zinc-800 active:scale-[0.98]',
+      ghost: 'bg-transparent text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/60 active:scale-[0.98]',
+      danger: 'bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 active:scale-[0.98]',
     }
 
     const sizes = {
-      sm: 'h-8 px-3 text-xs',
-      md: 'h-9 px-4 text-xs font-mono',
-      lg: 'h-11 px-6 text-sm font-mono',
+      sm: 'h-8 px-3 text-xs rounded-md gap-1.5',
+      md: 'h-9 px-4 text-sm rounded-md gap-2',
+      lg: 'h-11 px-5 text-sm rounded-lg gap-2.5',
     }
     
     return (
       <button
         ref={ref}
         disabled={loading || disabled}
-        data-magnetic={magnetic}
-        onMouseEnter={(e) => {
-          sound.playClick(950, 0.015)
-          onMouseEnter?.(e)
-        }}
         onClick={(e) => {
-          sound.playClick(750, 0.025)
+          sound.playClick(750, 0.02)
           onClick?.(e)
         }}
         className={cn(
-          'relative inline-flex items-center justify-center rounded-[4px] select-none overflow-hidden transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none group cursor-pointer will-change-transform',
-          // Top specular highlight hairline
-          'before:absolute before:inset-x-0 before:top-0 before:h-[1px] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:pointer-events-none',
+          'inline-flex items-center justify-center font-medium font-sans select-none transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0',
           variants[variant],
           sizes[size],
           className
         )}
         {...props}
       >
-        {loading && <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />}
+        {loading && <Loader2 className="animate-spin" />}
         {children}
       </button>
     )
