@@ -5,7 +5,8 @@ import { sound } from '@/lib/soundEngine'
 import { 
   ArrowRight, CheckCircle2, AlertTriangle, RefreshCw,
   Shield, Terminal, Cpu, Database, ChevronRight, Lock, 
-  GitCommit, ArrowDown, FileText, Check, ShieldAlert, Sparkles, Scale
+  GitCommit, ArrowDown, FileText, Check, ShieldAlert, Sparkles, Scale,
+  Layers, Code2, ArrowUpRight, Copy
 } from 'lucide-react'
 
 interface CasePreset {
@@ -125,7 +126,7 @@ export default function LandingPage() {
       setHashingActive(false)
       setReplaySuccess(true)
       sound.playVerify()
-    }, 500)
+    }, 550)
   }
 
   const scrollToWorkbench = () => {
@@ -138,103 +139,188 @@ export default function LandingPage() {
     : preset.asserted
 
   return (
-    <div className="space-y-28 py-6 relative z-10 font-sans">
+    <div className="space-y-32 py-6 relative z-10 font-sans">
       
-      {/* ── 1. Hero Statement & Purpose ───────────────────────────────── */}
-      <section className="max-w-4xl space-y-7 pt-4">
+      {/* ── 1. Hero Statement & Dynamic Pipeline Architecture ───────── */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-4">
         
-        {/* Minimal Executive Eyebrow */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-900 border border-white/[0.08] text-xs text-zinc-300 select-none shadow-sm">
-          <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-          <span className="font-medium text-zinc-200">Cairnquill 0.1</span>
-          <span className="text-zinc-600">·</span>
-          <span className="text-zinc-400">Snowflake Cortex Claim Verifier</span>
-        </div>
+        {/* Left Column (7 cols): Editorial Copy & Direct CTAs */}
+        <div className="lg:col-span-7 space-y-7">
+          
+          {/* Status Badge */}
+          <div className="inline-flex items-center gap-2.5 px-3 py-1 rounded-full bg-zinc-900/90 border border-sky-500/30 text-xs text-zinc-300 select-none shadow-[0_0_20px_rgba(56,189,248,0.15)]">
+            <span className="flex h-2 w-2 relative">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
+            </span>
+            <span className="font-semibold text-white tracking-wide">Snowflake Cortex Engine</span>
+            <span className="text-zinc-600">·</span>
+            <span className="text-zinc-400">Zero-Trust SQL Verifier</span>
+          </div>
 
-        {/* Clean, Authoritative Headline */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-semibold tracking-tight text-white leading-[1.08]">
-          Zero-tolerance verification for AI compliance reports.
-        </h1>
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-white leading-[1.08]">
+            <span className="bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent">
+              Zero-tolerance verification
+            </span>{' '}
+            for generative compliance intelligence.
+          </h1>
 
-        {/* Narrative Subtitle */}
-        <p className="text-base sm:text-lg text-zinc-400 max-w-2xl leading-relaxed">
-          LLMs hallucinate financial amounts, counts, and dates. Cairnquill pairs Snowflake Cortex synthesis with a zero-trust SQL verification compiler and cryptographic audit seals — mathematically proving every claim before regulatory submission.
-        </p>
+          {/* Subtitle */}
+          <p className="text-base sm:text-lg text-zinc-400 max-w-xl leading-relaxed">
+            Large language models hallucinate transaction amounts, counts, and dates. Cairnquill pairs Snowflake Cortex LLM synthesis with a deterministic SQL verification compiler — proving every claim before regulatory filing.
+          </p>
 
-        {/* Elevated Hero Button Cluster */}
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <Link to="/queue">
+          {/* Action Row */}
+          <div className="flex flex-wrap items-center gap-3 pt-2">
+            <Link to="/queue">
+              <Button 
+                size="lg" 
+                variant="primary"
+                className="gap-2 shadow-lg shadow-white/5 px-6 text-sm font-semibold"
+              >
+                <span>Open AML Queue</span>
+                <ArrowRight size={15} />
+              </Button>
+            </Link>
+
             <Button 
               size="lg" 
-              variant="primary"
-              className="gap-2 shadow-md px-6 text-sm"
+              variant="secondary"
+              onClick={scrollToWorkbench}
+              className="gap-2 text-sm text-zinc-200 hover:text-white"
             >
-              <span>Open AML Queue</span>
-              <ArrowRight size={15} />
+              <span>Explore Verification Sandbox</span>
+              <ArrowDown size={14} className="opacity-60" />
             </Button>
-          </Link>
 
-          <Button 
-            size="lg" 
-            variant="secondary"
-            onClick={scrollToWorkbench}
-            className="gap-2 text-sm text-zinc-200 hover:text-white"
-          >
-            <span>Try Verification Sandbox</span>
-            <ArrowDown size={14} className="opacity-60" />
-          </Button>
+            <Link to="/ask" className="hidden sm:inline-flex">
+              <Button 
+                variant="ghost" 
+                size="lg" 
+                className="gap-2 text-sm text-zinc-400 hover:text-zinc-100"
+              >
+                <Terminal size={14} className="text-accent" />
+                <span>Ask Regulatory Assistant</span>
+              </Button>
+            </Link>
+          </div>
 
-          <Link to="/ask">
-            <Button 
-              variant="ghost" 
-              size="lg" 
-              className="gap-2 text-sm text-zinc-400 hover:text-zinc-100"
-            >
-              <Terminal size={14} className="text-accent" />
-              <span>Ask Regulatory Assistant</span>
-            </Button>
-          </Link>
+          {/* Micro-Telemetry Metric Strip */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-white/[0.08]">
+            <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-white/[0.06] space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono">Drift Tolerance</div>
+              <div className="text-lg font-bold text-emerald-400 font-mono tabular-nums">$0.00 Max</div>
+              <div className="text-[11px] text-zinc-400">Zero error permitted</div>
+            </div>
+
+            <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-white/[0.06] space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono">Catch Rate</div>
+              <div className="text-lg font-bold text-white font-mono tabular-nums">98.5%</div>
+              <div className="text-[11px] text-zinc-400">120/120 mutations</div>
+            </div>
+
+            <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-white/[0.06] space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono">SQL Latency</div>
+              <div className="text-lg font-bold text-accent font-mono tabular-nums">412ms</div>
+              <div className="text-[11px] text-zinc-400">Sub-second proof</div>
+            </div>
+
+            <div className="p-3.5 rounded-lg bg-zinc-900/60 border border-white/[0.06] space-y-1">
+              <div className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono">Audit Chain</div>
+              <div className="text-lg font-bold text-purple-400 font-mono tabular-nums">SHA-256</div>
+              <div className="text-[11px] text-zinc-400">100% tamper-evident</div>
+            </div>
+          </div>
+
         </div>
 
-        {/* Micro-Telemetry Metric Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 pt-6 border-t border-white/[0.08]">
-          <div className="p-4 rounded-lg bg-zinc-950/60 border border-white/[0.06] space-y-1">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-500 font-mono">Drift Tolerance</div>
-            <div className="text-lg font-semibold text-emerald-400 font-mono tabular-nums">$0.00 Delta</div>
-            <div className="text-xs text-zinc-400">Exact arithmetic match</div>
-          </div>
+        {/* Right Column (5 cols): Interactive Protocol Pipeline Card */}
+        <div className="lg:col-span-5">
+          <div className="p-6 rounded-2xl bg-gradient-to-b from-zinc-900/90 via-zinc-950/90 to-zinc-950/95 border border-white/[0.1] shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_50px_-20px_rgba(56,189,248,0.15)] relative overflow-hidden space-y-5">
+            
+            {/* Top highlight hairline */}
+            <div className="absolute top-0 inset-x-0 h-[1px] bg-gradient-to-r from-transparent via-sky-500/60 to-transparent" />
 
-          <div className="p-4 rounded-lg bg-zinc-950/60 border border-white/[0.06] space-y-1">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-500 font-mono">Catch Rate</div>
-            <div className="text-lg font-semibold text-white font-mono tabular-nums">98.5% Accuracy</div>
-            <div className="text-xs text-zinc-400">120/120 mutations caught</div>
-          </div>
+            <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+              <div className="flex items-center gap-2">
+                <Shield className="text-accent" size={16} />
+                <span className="text-xs font-semibold uppercase tracking-wider text-white font-mono">
+                  Surveyor-Quill Architecture
+                </span>
+              </div>
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                ACTIVE PIPELINE
+              </span>
+            </div>
 
-          <div className="p-4 rounded-lg bg-zinc-950/60 border border-white/[0.06] space-y-1">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-500 font-mono">Verification Speed</div>
-            <div className="text-lg font-semibold text-accent font-mono tabular-nums">412ms Mean</div>
-            <div className="text-xs text-zinc-400">Sub-second query proof</div>
-          </div>
+            {/* Pipeline Stage 1 */}
+            <div className="p-3.5 rounded-lg bg-zinc-900/70 border border-white/[0.06] space-y-1.5 transition-all hover:border-sky-500/30">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-sky-400 font-semibold flex items-center gap-1.5">
+                  <Database size={13} /> 1. Frozen Evidence Cairn
+                </span>
+                <span className="text-zinc-500 text-[10px]">EVIDENCE.CASE_ROWS</span>
+              </div>
+              <div className="text-xs text-zinc-300">
+                14 transaction records frozen with immutable row hashes ($4,821,400.00 USD).
+              </div>
+            </div>
 
-          <div className="p-4 rounded-lg bg-zinc-950/60 border border-white/[0.06] space-y-1">
-            <div className="text-[11px] uppercase tracking-wider text-zinc-500 font-mono">Audit Standard</div>
-            <div className="text-lg font-semibold text-purple-400 font-mono tabular-nums">SHA-256 Chain</div>
-            <div className="text-xs text-zinc-400">100% Merkle tamper-evident</div>
+            {/* Pipeline Stage 2 */}
+            <div className="p-3.5 rounded-lg bg-zinc-900/70 border border-white/[0.06] space-y-1.5 transition-all hover:border-purple-500/30">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-purple-400 font-semibold flex items-center gap-1.5">
+                  <Cpu size={13} /> 2. Cortex LLM Draft & AST
+                </span>
+                <span className="text-zinc-500 text-[10px]">snowflake-arctic</span>
+              </div>
+              <div className="text-xs text-zinc-300">
+                Generates natural language narrative with claims: <code className="text-zinc-200 font-mono text-[11px]">[c-001: SUM_AMOUNT]</code>.
+              </div>
+            </div>
+
+            {/* Pipeline Stage 3 */}
+            <div className="p-3.5 rounded-lg bg-zinc-900/70 border border-emerald-500/30 bg-emerald-500/[0.03] space-y-1.5">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
+                  <CheckCircle2 size={13} /> 3. Deterministic SQL Surveyor
+                </span>
+                <span className="text-emerald-400 text-[10px] font-bold">ZERO DRIFT</span>
+              </div>
+              <div className="text-xs text-zinc-300">
+                Executes parameterized SQL queries against evidence. If math deviates by even $0.01, draft is blocked.
+              </div>
+            </div>
+
+            {/* Pipeline Stage 4 */}
+            <div className="p-3.5 rounded-lg bg-zinc-900/70 border border-white/[0.06] space-y-1.5">
+              <div className="flex items-center justify-between text-xs font-mono">
+                <span className="text-zinc-300 font-semibold flex items-center gap-1.5">
+                  <Lock size={13} /> 4. Cryptographic Audit Seal
+                </span>
+                <span className="text-zinc-500 text-[10px]">AUDIT.FILINGS</span>
+              </div>
+              <div className="text-xs text-zinc-400 font-mono text-[11px] truncate">
+                SHA256: e3b0c44298fc1c149afbf4c8996fb92427...
+              </div>
+            </div>
+
           </div>
         </div>
 
       </section>
 
       {/* ── 2. Interactive Verification Console (The Workbench) ──────── */}
-      <section id="workbench" className="space-y-4 pt-4">
+      <section id="workbench" className="space-y-5 pt-4">
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/[0.08] pb-4">
           <div>
             <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1 flex items-center gap-1.5">
-              <Cpu size={14} /> Interactive Verification Sandbox
+              <Cpu size={14} /> Interactive Live Sandbox
             </div>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
               Surveyor Verification Console
             </h2>
             <p className="text-sm text-zinc-400 mt-1 max-w-xl">
@@ -255,7 +341,7 @@ export default function LandingPage() {
                 }}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
                   activeKey === key
-                    ? 'bg-zinc-800 text-white shadow-sm font-medium'
+                    ? 'bg-zinc-800 text-white shadow-sm font-semibold'
                     : 'text-zinc-400 hover:text-zinc-200'
                 }`}
               >
@@ -265,43 +351,43 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Test Mode Switcher Controls */}
+        {/* Simulation Controls */}
         <div className="flex flex-wrap items-center justify-between gap-3 text-xs pt-1">
           <span className="text-zinc-400 font-medium">SIMULATION SCENARIO:</span>
           
           <div className="flex items-center gap-2">
             <button
               onClick={() => triggerVerification(false)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
                 !injectError 
-                  ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30' 
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm font-semibold' 
                   : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-white/[0.06]'
               }`}
             >
-              Ground Truth Snapshot (Zero Drift)
+              ● Ground Truth (Zero Drift)
             </button>
             <button
               onClick={() => triggerVerification(true)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+              className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
                 injectError 
-                  ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30' 
+                  ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40 shadow-sm font-semibold' 
                   : 'bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-white/[0.06]'
               }`}
             >
-              Inject +10% Hallucination Drift
+              ▲ Inject +10% Hallucination Drift
             </button>
           </div>
         </div>
 
         {/* High-Precision Console Frame */}
-        <div className="rounded-xl bg-zinc-950/90 border border-white/[0.08] overflow-hidden shadow-2xl">
+        <div className="rounded-2xl bg-zinc-950/95 border border-white/[0.1] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.8),0_0_80px_-20px_rgba(56,189,248,0.12)]">
           
           {/* Console Telemetry Top Bar */}
-          <div className="px-5 py-3 border-b border-white/[0.08] bg-zinc-900/60 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+          <div className="px-6 py-3.5 border-b border-white/[0.08] bg-zinc-900/70 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
             <div className="flex items-center gap-3">
-              <span className="text-accent font-semibold">{preset.id}</span>
+              <span className="text-accent font-bold">{preset.id}</span>
               <span className="text-zinc-600">·</span>
-              <span className="text-zinc-300">{preset.typology}</span>
+              <span className="text-zinc-300 font-semibold">{preset.typology}</span>
             </div>
             <div className="flex items-center gap-4 text-zinc-400">
               <span>Latency: <strong className="text-white font-medium">{preset.evidence.latency}</strong></span>
@@ -323,27 +409,27 @@ export default function LandingPage() {
                 </span>
               </div>
 
-              <div className="p-4 rounded-lg bg-zinc-900/60 border border-white/[0.06] space-y-1 font-mono">
+              <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] space-y-1 font-mono">
                 <div className="text-[10px] uppercase text-zinc-500">Audited Snapshot Volume</div>
                 <div className="text-xl font-bold text-white tabular-nums">{preset.evidence.volume}</div>
               </div>
 
               <div className="space-y-2 text-xs text-zinc-300">
-                <div className="flex justify-between py-1 border-b border-white/[0.04]">
+                <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
                   <span className="text-zinc-500">Mined Transactions:</span>
-                  <span className="font-mono font-medium text-white">{preset.evidence.txns} rows</span>
+                  <span className="font-mono font-medium text-white">{preset.evidence.txns} records</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-white/[0.04]">
+                <div className="flex justify-between py-1.5 border-b border-white/[0.04]">
                   <span className="text-zinc-500">Offshore Entities:</span>
                   <span className="font-mono font-medium text-white">{preset.evidence.entities} entities</span>
                 </div>
-                <div className="flex justify-between py-1">
+                <div className="flex justify-between py-1.5">
                   <span className="text-zinc-500">Detected Pattern:</span>
                   <span className="font-mono font-medium text-white">{preset.evidence.pattern}</span>
                 </div>
               </div>
 
-              <div className="p-2.5 rounded bg-zinc-900/40 border border-white/[0.06] text-[11px] text-zinc-400 font-mono">
+              <div className="p-3 rounded-lg bg-zinc-900/40 border border-white/[0.06] text-[11px] text-zinc-400 font-mono">
                 Source: <code className="text-accent">EVIDENCE.CASE_ROWS</code>
               </div>
             </div>
@@ -359,14 +445,14 @@ export default function LandingPage() {
                 </span>
               </div>
 
-              <div className="p-4 rounded-lg bg-zinc-900/60 border border-white/[0.06] text-xs leading-relaxed text-zinc-200">
+              <div className="p-4 rounded-xl bg-zinc-900/60 border border-white/[0.06] text-xs leading-relaxed text-zinc-200">
                 &ldquo;{preset.claimText.replace(preset.asserted, displayedClaimAmount)}&rdquo;
               </div>
 
               <div className="p-3.5 rounded-lg bg-zinc-900/40 border border-white/[0.06] font-mono text-xs space-y-2">
                 <div className="flex justify-between text-zinc-400">
                   <span>Claim AST Type:</span>
-                  <span className="text-accent font-medium">SUM_AMOUNT</span>
+                  <span className="text-accent font-semibold">SUM_AMOUNT</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-zinc-400">Asserted Value:</span>
@@ -383,23 +469,23 @@ export default function LandingPage() {
                 <span className="text-xs font-mono font-medium uppercase tracking-wider text-zinc-400">
                   3. Deterministic SQL Proof
                 </span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-semibold ${
+                <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
                   injectError 
-                    ? 'bg-rose-500/15 text-rose-300 border border-rose-500/30' 
-                    : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
+                    ? 'bg-rose-500/20 text-rose-300 border border-rose-500/40' 
+                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                 }`}>
                   {injectError ? 'BLOCKED' : 'VERIFIED'}
                 </span>
               </div>
 
               {isVerifying ? (
-                <div className="p-6 rounded-lg bg-zinc-900/60 flex flex-col items-center justify-center gap-2 text-xs font-mono text-zinc-400">
+                <div className="p-6 rounded-xl bg-zinc-900/60 flex flex-col items-center justify-center gap-2 text-xs font-mono text-zinc-400">
                   <RefreshCw size={18} className="animate-spin text-accent" />
                   <span>Executing parameterized SQL verification...</span>
                 </div>
               ) : injectError ? (
-                <div className="p-4 rounded-lg bg-rose-500/10 border border-rose-500/30 space-y-2 text-xs font-mono">
-                  <div className="flex items-center gap-2 font-semibold text-rose-300">
+                <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 space-y-2 text-xs font-mono">
+                  <div className="flex items-center gap-2 font-bold text-rose-300">
                     <AlertTriangle size={15} />
                     <span>VERDICT: CONTRADICTED</span>
                   </div>
@@ -412,8 +498,8 @@ export default function LandingPage() {
                   </div>
                 </div>
               ) : (
-                <div className="p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 space-y-2 text-xs font-mono">
-                  <div className="flex items-center gap-2 font-semibold text-emerald-300">
+                <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 space-y-2 text-xs font-mono">
+                  <div className="flex items-center gap-2 font-bold text-emerald-300">
                     <CheckCircle2 size={15} />
                     <span>VERDICT: VERIFIED (0.00% Delta)</span>
                   </div>
@@ -461,20 +547,20 @@ export default function LandingPage() {
       {/* ── 3. Operational Mechanics: The Four Safeguards ────────────── */}
       <section className="space-y-8">
         <div>
-          <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1.5">
+          <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1.5 font-semibold">
             Zero Hallucination Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
             Designed for regulatory examination under PMLA and FATF.
           </h2>
-          <p className="text-sm text-zinc-400 mt-1 max-w-2xl">
+          <p className="text-sm text-zinc-400 mt-1 max-w-2xl leading-relaxed">
             How Cairnquill provides end-to-end mathematical accountability across the four stages of AML filing.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-4">
           
-          <div className="p-6 rounded-lg border border-white/[0.08] bg-zinc-950/60 space-y-3 hover:border-white/[0.16] transition-colors">
+          <div className="p-6 rounded-xl border border-white/[0.08] bg-zinc-950/70 space-y-3 hover:border-sky-500/30 transition-all shadow-sm">
             <div className="font-mono text-xs text-accent font-semibold">01 // GRAPH MINING</div>
             <h3 className="text-base font-semibold text-white">Subgraphs Frozen in Evidence Cairns</h3>
             <p className="text-sm text-zinc-400 leading-relaxed">
@@ -482,7 +568,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-lg border border-white/[0.08] bg-zinc-950/60 space-y-3 hover:border-white/[0.16] transition-colors">
+          <div className="p-6 rounded-xl border border-white/[0.08] bg-zinc-950/70 space-y-3 hover:border-purple-500/30 transition-all shadow-sm">
             <div className="font-mono text-xs text-indigo-400 font-semibold">02 // ATOMIC CLAIM DECOMPOSITION</div>
             <h3 className="text-base font-semibold text-white">Quill Cortex LLM AST Extraction</h3>
             <p className="text-sm text-zinc-400 leading-relaxed">
@@ -490,7 +576,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-lg border border-white/[0.08] bg-zinc-950/60 space-y-3 hover:border-white/[0.16] transition-colors">
+          <div className="p-6 rounded-xl border border-white/[0.08] bg-zinc-950/70 space-y-3 hover:border-emerald-500/30 transition-all shadow-sm">
             <div className="font-mono text-xs text-emerald-400 font-semibold">03 // DETERMINISTIC SQL SURVEYOR</div>
             <h3 className="text-base font-semibold text-white">Zero Reliance on LLM Arithmetic</h3>
             <p className="text-sm text-zinc-400 leading-relaxed">
@@ -498,7 +584,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="p-6 rounded-lg border border-white/[0.08] bg-zinc-950/60 space-y-3 hover:border-white/[0.16] transition-colors">
+          <div className="p-6 rounded-xl border border-white/[0.08] bg-zinc-950/70 space-y-3 hover:border-rose-500/30 transition-all shadow-sm">
             <div className="font-mono text-xs text-purple-400 font-semibold">04 // TAMPER-PROOF MERKLE CHAIN</div>
             <h3 className="text-base font-semibold text-white">Cryptographic Maker-Checker Chain</h3>
             <p className="text-sm text-zinc-400 leading-relaxed">
@@ -510,9 +596,9 @@ export default function LandingPage() {
       </section>
 
       {/* ── 4. Comparison: Raw LLM vs Cairnquill Architecture ──────── */}
-      <section className="border border-white/[0.08] rounded-xl bg-zinc-950/60 p-6 sm:p-8 space-y-6">
+      <section className="border border-white/[0.08] rounded-2xl bg-zinc-950/80 p-6 sm:p-8 space-y-6 shadow-lg">
         <div>
-          <h3 className="text-lg font-semibold text-white">
+          <h3 className="text-lg font-bold text-white">
             Architecture Comparison: Raw LLM vs Cairnquill Surveyor
           </h3>
           <p className="text-xs text-zinc-400 mt-1">
@@ -556,16 +642,16 @@ export default function LandingPage() {
       </section>
 
       {/* ── 5. Final CTA ────────────────────────────────────────────── */}
-      <section className="p-8 sm:p-10 rounded-xl bg-gradient-to-b from-zinc-900/60 to-zinc-950/80 border border-white/[0.08] text-center space-y-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-white">
+      <section className="p-8 sm:p-12 rounded-2xl bg-gradient-to-b from-zinc-900/80 via-zinc-950/90 to-zinc-950 border border-white/[0.1] text-center space-y-4 shadow-xl">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-white">
           Ready to inspect the live AML triage queue?
         </h2>
-        <p className="text-sm text-zinc-400 max-w-lg mx-auto">
+        <p className="text-sm text-zinc-400 max-w-lg mx-auto leading-relaxed">
           Explore synthetic alerts, mine evidence subgraphs, generate Cortex drafts, and run deterministic Surveyor verifications.
         </p>
-        <div className="pt-2 flex justify-center gap-3">
+        <div className="pt-3 flex justify-center gap-3">
           <Link to="/queue">
-            <Button size="lg" variant="primary" className="gap-2 px-6">
+            <Button size="lg" variant="primary" className="gap-2 px-6 font-semibold shadow-md">
               <span>Open Triage Queue</span>
               <ArrowRight size={15} />
             </Button>
