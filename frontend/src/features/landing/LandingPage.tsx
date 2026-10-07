@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui'
 import { sound } from '@/lib/soundEngine'
 import { 
-  ArrowRight, CheckCircle2, AlertTriangle, RefreshCw,
-  Shield, Terminal, Cpu, Database, Lock, ArrowDown
+  ArrowRight, CheckCircle2, AlertTriangle, RefreshCw, ArrowDown
 } from 'lucide-react'
 
 interface CasePreset {
@@ -137,7 +136,7 @@ export default function LandingPage() {
     : preset.asserted
 
   return (
-    <div className="space-y-24 py-6 relative z-10 font-sans">
+    <div className="space-y-28 py-6 relative z-10 font-sans">
       
       {/* ── 1. Hero Statement & Dynamic Pipeline Architecture ───────── */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-2">
@@ -148,13 +147,13 @@ export default function LandingPage() {
           {/* Status Badge */}
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-2 border border-hairline text-xs text-ink-2 select-none shadow-sm">
             <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-            <span className="font-medium text-ink">Snowflake Cortex Engine</span>
+            <span className="font-semibold text-ink font-display">Snowflake Cortex Engine</span>
             <span className="text-hairline-bold">/</span>
             <span>Zero-Trust SQL Verifier</span>
           </div>
 
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold tracking-tight text-ink leading-[1.08]">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-ink font-display leading-[1.06]">
             Zero-tolerance verification for generative compliance intelligence.
           </h1>
 
@@ -169,7 +168,7 @@ export default function LandingPage() {
               <Button 
                 size="lg" 
                 variant="primary"
-                className="gap-2 px-5 text-sm font-medium"
+                className="gap-2 px-6 text-sm font-semibold font-display shadow-sm"
               >
                 <span>Open AML Queue</span>
                 <ArrowRight size={15} />
@@ -180,7 +179,7 @@ export default function LandingPage() {
               size="lg" 
               variant="secondary"
               onClick={scrollToWorkbench}
-              className="gap-2 text-sm text-ink-2 hover:text-ink"
+              className="gap-2 text-sm text-ink-2 hover:text-ink font-medium"
             >
               <span>Explore Verification Sandbox</span>
               <ArrowDown size={14} className="opacity-60" />
@@ -190,38 +189,38 @@ export default function LandingPage() {
               <Button 
                 variant="ghost" 
                 size="lg" 
-                className="gap-2 text-sm text-ink-2 hover:text-ink"
+                className="gap-2 text-sm text-ink-2 hover:text-ink font-medium"
               >
-                <Terminal size={14} className="text-ink-faint" />
                 <span>Regulatory Assistant</span>
+                <ArrowRight size={14} className="opacity-50" />
               </Button>
             </Link>
           </div>
 
           {/* Telemetry Metric Strip */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-6 border-t border-hairline">
-            <div className="p-3.5 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
-              <div className="text-[10px] uppercase tracking-wider text-ink-faint font-mono">Drift Tolerance</div>
-              <div className="text-lg font-bold text-emerald-400 font-mono tabular-nums">$0.00 Max</div>
-              <div className="text-[11px] text-ink-2">Zero error permitted</div>
+            <div className="p-4 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
+              <div className="text-[11px] uppercase tracking-wider text-ink-faint font-mono font-medium">Drift Tolerance</div>
+              <div className="text-xl font-bold text-emerald-400 font-mono tabular-nums">$0.00 Max</div>
+              <div className="text-xs text-ink-2">Zero error permitted</div>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
-              <div className="text-[10px] uppercase tracking-wider text-ink-faint font-mono">Catch Rate</div>
-              <div className="text-lg font-bold text-ink font-mono tabular-nums">98.5%</div>
-              <div className="text-[11px] text-ink-2">120/120 mutations</div>
+            <div className="p-4 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
+              <div className="text-[11px] uppercase tracking-wider text-ink-faint font-mono font-medium">Catch Rate</div>
+              <div className="text-xl font-bold text-ink font-mono tabular-nums">98.5%</div>
+              <div className="text-xs text-ink-2">120/120 mutations</div>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
-              <div className="text-[10px] uppercase tracking-wider text-ink-faint font-mono">SQL Latency</div>
-              <div className="text-lg font-bold text-accent font-mono tabular-nums">412ms</div>
-              <div className="text-[11px] text-ink-2">Sub-second proof</div>
+            <div className="p-4 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
+              <div className="text-[11px] uppercase tracking-wider text-ink-faint font-mono font-medium">SQL Latency</div>
+              <div className="text-xl font-bold text-accent font-mono tabular-nums">412ms</div>
+              <div className="text-xs text-ink-2">Sub-second proof</div>
             </div>
 
-            <div className="p-3.5 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
-              <div className="text-[10px] uppercase tracking-wider text-ink-faint font-mono">Audit Chain</div>
-              <div className="text-lg font-bold text-ink font-mono tabular-nums">SHA-256</div>
-              <div className="text-[11px] text-ink-2">100% tamper-evident</div>
+            <div className="p-4 rounded-lg bg-surface border border-hairline shadow-1 space-y-1">
+              <div className="text-[11px] uppercase tracking-wider text-ink-faint font-mono font-medium">Audit Chain</div>
+              <div className="text-xl font-bold text-ink font-mono tabular-nums">SHA-256</div>
+              <div className="text-xs text-ink-2">100% tamper-evident</div>
             </div>
           </div>
 
@@ -233,12 +232,12 @@ export default function LandingPage() {
             
             <div className="flex items-center justify-between border-b border-hairline pb-3.5">
               <div className="flex items-center gap-2">
-                <Shield className="text-accent" size={16} />
-                <span className="text-xs font-semibold uppercase tracking-wider text-ink font-mono">
+                <span className="w-2 h-2 rounded-full bg-accent" />
+                <span className="text-xs font-bold uppercase tracking-wider text-ink font-mono">
                   Surveyor-Quill Architecture
                 </span>
               </div>
-              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+              <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">
                 ACTIVE PIPELINE
               </span>
             </div>
@@ -246,12 +245,13 @@ export default function LandingPage() {
             {/* Pipeline Stage 1 */}
             <div className="p-3.5 rounded-lg bg-surface-2 border border-hairline transition-all hover:border-hairline-bold space-y-1.5">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-accent font-semibold flex items-center gap-1.5">
-                  <Database size={13} /> 1. Frozen Evidence Cairn
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded flex items-center justify-center bg-accent/15 text-accent text-[11px] font-bold">01</span>
+                  <span className="text-ink font-semibold">Frozen Evidence Cairn</span>
+                </div>
                 <span className="text-ink-faint text-[10px]">EVIDENCE.CASE_ROWS</span>
               </div>
-              <div className="text-xs text-ink-2">
+              <div className="text-xs text-ink-2 leading-relaxed">
                 14 transaction records frozen with immutable row hashes ($4,821,400.00 USD).
               </div>
             </div>
@@ -259,12 +259,13 @@ export default function LandingPage() {
             {/* Pipeline Stage 2 */}
             <div className="p-3.5 rounded-lg bg-surface-2 border border-hairline transition-all hover:border-hairline-bold space-y-1.5">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-ink font-semibold flex items-center gap-1.5">
-                  <Cpu size={13} /> 2. Cortex LLM Draft &amp; AST
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded flex items-center justify-center bg-white/[0.08] text-ink text-[11px] font-bold">02</span>
+                  <span className="text-ink font-semibold">Cortex LLM Draft &amp; AST</span>
+                </div>
                 <span className="text-ink-faint text-[10px]">snowflake-arctic</span>
               </div>
-              <div className="text-xs text-ink-2">
+              <div className="text-xs text-ink-2 leading-relaxed">
                 Generates natural language narrative with claims: <code className="text-ink font-mono text-[11px]">[c-001: SUM_AMOUNT]</code>.
               </div>
             </div>
@@ -272,12 +273,13 @@ export default function LandingPage() {
             {/* Pipeline Stage 3 */}
             <div className="p-3.5 rounded-lg bg-surface-2 border border-emerald-500/30 bg-emerald-500/[0.03] space-y-1.5">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-emerald-400 font-semibold flex items-center gap-1.5">
-                  <CheckCircle2 size={13} /> 3. Deterministic SQL Surveyor
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded flex items-center justify-center bg-emerald-500/20 text-emerald-400 text-[11px] font-bold">03</span>
+                  <span className="text-emerald-300 font-semibold">Deterministic SQL Surveyor</span>
+                </div>
                 <span className="text-emerald-400 text-[10px] font-bold">ZERO DRIFT</span>
               </div>
-              <div className="text-xs text-ink-2">
+              <div className="text-xs text-ink-2 leading-relaxed">
                 Executes parameterized SQL queries against evidence. If math deviates by even $0.01, draft is blocked.
               </div>
             </div>
@@ -285,9 +287,10 @@ export default function LandingPage() {
             {/* Pipeline Stage 4 */}
             <div className="p-3.5 rounded-lg bg-surface-2 border border-hairline space-y-1.5">
               <div className="flex items-center justify-between text-xs font-mono">
-                <span className="text-ink-2 font-semibold flex items-center gap-1.5">
-                  <Lock size={13} /> 4. Cryptographic Audit Seal
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="w-5 h-5 rounded flex items-center justify-center bg-white/[0.06] text-ink-2 text-[11px] font-bold">04</span>
+                  <span className="text-ink-2 font-semibold">Cryptographic Audit Seal</span>
+                </div>
                 <span className="text-ink-faint text-[10px]">AUDIT.FILINGS</span>
               </div>
               <div className="text-xs text-ink-faint font-mono text-[11px] truncate">
@@ -301,18 +304,18 @@ export default function LandingPage() {
       </section>
 
       {/* ── 2. Interactive Verification Console (The Workbench) ──────── */}
-      <section id="workbench" className="space-y-5 pt-4">
+      <section id="workbench" className="space-y-6 pt-4">
         
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-hairline pb-4">
           <div>
-            <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1 flex items-center gap-1.5">
-              <Cpu size={14} /> Interactive Live Sandbox
+            <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1.5 font-semibold">
+              ● Interactive Live Sandbox
             </div>
-            <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink font-display">
               Surveyor Verification Console
             </h2>
-            <p className="text-sm text-ink-2 mt-1 max-w-xl">
+            <p className="text-sm text-ink-2 mt-1.5 max-w-xl leading-relaxed">
               Inspect how the zero-trust SQL compiler executes against frozen Snowflake evidence cairns to catch LLM hallucination drift.
             </p>
           </div>
@@ -328,7 +331,7 @@ export default function LandingPage() {
                   setInjectError(false)
                   setReplaySuccess(false)
                 }}
-                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+                className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-all ${
                   activeKey === key
                     ? 'bg-surface-3 text-ink shadow-sm font-semibold'
                     : 'text-ink-2 hover:text-ink'
@@ -390,10 +393,10 @@ export default function LandingPage() {
             {/* Stage 1: Evidence Snapshot */}
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-medium uppercase tracking-wider text-ink-faint">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-ink-faint">
                   1. Evidence Snapshot
                 </span>
-                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-accent/10 text-accent border border-accent/20">
+                <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-accent/10 text-accent border border-accent/20 font-medium">
                   FROZEN CAIRN
                 </span>
               </div>
@@ -419,14 +422,14 @@ export default function LandingPage() {
               </div>
 
               <div className="p-2.5 rounded-lg bg-surface-2 border border-hairline text-[11px] text-ink-2 font-mono">
-                Source: <code className="text-accent">EVIDENCE.CASE_ROWS</code>
+                Source: <code className="text-accent font-semibold">EVIDENCE.CASE_ROWS</code>
               </div>
             </div>
 
             {/* Stage 2: Quill LLM Synthesis */}
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-medium uppercase tracking-wider text-ink-faint">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-ink-faint">
                   2. Cortex LLM Draft Claim
                 </span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-mono bg-white/[0.04] text-ink-2 border border-hairline">
@@ -434,7 +437,7 @@ export default function LandingPage() {
                 </span>
               </div>
 
-              <div className="p-4 rounded-lg bg-surface-2 border border-hairline text-xs leading-relaxed text-ink">
+              <div className="p-4 rounded-lg bg-surface-2 border border-hairline text-xs leading-relaxed text-ink font-sans">
                 &ldquo;{preset.claimText.replace(preset.asserted, displayedClaimAmount)}&rdquo;
               </div>
 
@@ -455,7 +458,7 @@ export default function LandingPage() {
             {/* Stage 3: Surveyor SQL Verification */}
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono font-medium uppercase tracking-wider text-ink-faint">
+                <span className="text-xs font-mono font-semibold uppercase tracking-wider text-ink-faint">
                   3. Deterministic SQL Proof
                 </span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-mono font-bold ${
@@ -537,12 +540,12 @@ export default function LandingPage() {
       <section className="space-y-8">
         <div>
           <div className="text-xs font-mono uppercase tracking-wider text-accent mb-1.5 font-semibold">
-            Zero Hallucination Architecture
+            ● Zero Hallucination Architecture
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink font-display">
             Designed for regulatory examination under PMLA and FATF.
           </h2>
-          <p className="text-sm text-ink-2 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-sm text-ink-2 mt-1.5 max-w-2xl leading-relaxed">
             How Cairnquill provides end-to-end mathematical accountability across the four stages of AML filing.
           </p>
         </div>
@@ -550,32 +553,32 @@ export default function LandingPage() {
         <div className="grid md:grid-cols-2 gap-4">
           
           <div className="p-6 rounded-xl border border-hairline bg-surface space-y-3 hover:border-hairline-bold transition-all shadow-1">
-            <div className="font-mono text-xs text-ink-faint font-medium">01 // GRAPH MINING</div>
-            <h3 className="text-base font-semibold text-ink">Subgraphs Frozen in Evidence Cairns</h3>
+            <div className="font-mono text-xs text-accent font-semibold tracking-wider">01 // GRAPH MINING</div>
+            <h3 className="text-base font-semibold text-ink font-display">Subgraphs Frozen in Evidence Cairns</h3>
             <p className="text-sm text-ink-2 leading-relaxed">
               When an alert triggers, Snowflake stored procedures mine directed cyclic loops and fan-in structuring trees. The resulting records are permanently frozen in an append-only snapshot (<code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">EVIDENCE.CASE_ROWS</code>) with row-level SHA-256 hashes.
             </p>
           </div>
 
           <div className="p-6 rounded-xl border border-hairline bg-surface space-y-3 hover:border-hairline-bold transition-all shadow-1">
-            <div className="font-mono text-xs text-ink-faint font-medium">02 // ATOMIC CLAIM DECOMPOSITION</div>
-            <h3 className="text-base font-semibold text-ink">Quill Cortex LLM AST Extraction</h3>
+            <div className="font-mono text-xs text-accent font-semibold tracking-wider">02 // ATOMIC CLAIM DECOMPOSITION</div>
+            <h3 className="text-base font-semibold text-ink font-display">Quill Cortex LLM AST Extraction</h3>
             <p className="text-sm text-ink-2 leading-relaxed">
               Quill prompts Snowflake Cortex (<code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">llama3.1-70b</code>) to produce discrete claims tagged by type: <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">SUM_AMOUNT</code>, <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">COUNT_TXNS</code>, <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">TIME_SPAN_HOURS</code>, or <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">KYC_MISMATCH</code>. Unverifiable prose is explicitly tagged as <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">JUDGEMENT</code>.
             </p>
           </div>
 
           <div className="p-6 rounded-xl border border-hairline bg-surface space-y-3 hover:border-hairline-bold transition-all shadow-1">
-            <div className="font-mono text-xs text-ink-faint font-medium">03 // DETERMINISTIC SQL SURVEYOR</div>
-            <h3 className="text-base font-semibold text-ink">Zero Reliance on LLM Arithmetic</h3>
+            <div className="font-mono text-xs text-accent font-semibold tracking-wider">03 // DETERMINISTIC SQL SURVEYOR</div>
+            <h3 className="text-base font-semibold text-ink font-display">Zero Reliance on LLM Arithmetic</h3>
             <p className="text-sm text-ink-2 leading-relaxed">
               The Surveyor executes parameterized SQL templates directly against the frozen row snapshot, validating every assertion with strict mathematical tolerance ($0.00 for monetary totals, exact count equality). Any discrepancy immediately blocks submission.
             </p>
           </div>
 
           <div className="p-6 rounded-xl border border-hairline bg-surface space-y-3 hover:border-hairline-bold transition-all shadow-1">
-            <div className="font-mono text-xs text-ink-faint font-medium">04 // TAMPER-PROOF MERKLE CHAIN</div>
-            <h3 className="text-base font-semibold text-ink">Cryptographic Maker-Checker Chain</h3>
+            <div className="font-mono text-xs text-accent font-semibold tracking-wider">04 // TAMPER-PROOF MERKLE CHAIN</div>
+            <h3 className="text-base font-semibold text-ink font-display">Cryptographic Maker-Checker Chain</h3>
             <p className="text-sm text-ink-2 leading-relaxed">
               Dual-control approval enforces that an investigator cannot approve their own filing. Upon senior signoff, Cairnquill computes a SHA-256 seal combining evidence hashes, verified claim ASTs, verdicts, and model versions, chained sequentially in <code className="text-ink font-mono text-xs px-1.5 py-0.5 rounded bg-surface-2 border border-hairline">AUDIT.FILINGS</code>.
             </p>
@@ -587,7 +590,7 @@ export default function LandingPage() {
       {/* ── 4. Comparison: Raw LLM vs Cairnquill Architecture ──────── */}
       <section className="border border-hairline rounded-xl bg-surface p-6 sm:p-8 space-y-6 shadow-1">
         <div>
-          <h3 className="text-lg font-semibold text-ink">
+          <h3 className="text-lg font-bold text-ink font-display">
             Architecture Comparison: Raw LLM vs Cairnquill Surveyor
           </h3>
           <p className="text-xs text-ink-2 mt-1">
@@ -599,31 +602,31 @@ export default function LandingPage() {
           <table className="w-full text-left text-xs font-sans">
             <thead>
               <tr className="border-b border-hairline text-ink-faint font-mono text-[11px] uppercase">
-                <th className="pb-3 font-medium">Compliance Dimension</th>
-                <th className="pb-3 font-medium text-rose-400/90">Standard Generative AI (Unverified)</th>
-                <th className="pb-3 font-medium text-emerald-400">Cairnquill Surveyor Architecture</th>
+                <th className="pb-3 font-semibold">Compliance Dimension</th>
+                <th className="pb-3 font-semibold text-rose-400/90">Standard Generative AI (Unverified)</th>
+                <th className="pb-3 font-semibold text-emerald-400">Cairnquill Surveyor Architecture</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-hairline">
               <tr className="hover:bg-white/[0.02]">
                 <td className="py-3.5 font-medium text-ink">Numeric Accuracy</td>
                 <td className="py-3.5 text-ink-2">14–22% hallucination drift on multi-hop transfers</td>
-                <td className="py-3.5 text-emerald-300 font-medium">0.00% drift (enforced via SQL arithmetic)</td>
+                <td className="py-3.5 text-emerald-300 font-semibold">0.00% drift (enforced via SQL arithmetic)</td>
               </tr>
               <tr className="hover:bg-white/[0.02]">
                 <td className="py-3.5 font-medium text-ink">Audit Verifiability</td>
                 <td className="py-3.5 text-ink-2">Probabilistic text generation without ground truth links</td>
-                <td className="py-3.5 text-emerald-300 font-medium">Deterministic SQL proof linked to frozen snapshot rows</td>
+                <td className="py-3.5 text-emerald-300 font-semibold">Deterministic SQL proof linked to frozen snapshot rows</td>
               </tr>
               <tr className="hover:bg-white/[0.02]">
                 <td className="py-3.5 font-medium text-ink">Regulatory Liability</td>
                 <td className="py-3.5 text-ink-2">Non-compliant under PMLA § 12 &amp; FinCEN 31 CFR § 1020</td>
-                <td className="py-3.5 text-emerald-300 font-medium">Cryptographic SHA-256 Merkle chain with dual authorization</td>
+                <td className="py-3.5 text-emerald-300 font-semibold">Cryptographic SHA-256 Merkle chain with dual authorization</td>
               </tr>
               <tr className="hover:bg-white/[0.02]">
                 <td className="py-3.5 font-medium text-ink">Analyst Review Time</td>
                 <td className="py-3.5 text-ink-2">Hours spent manually verifying every line of prose</td>
-                <td className="py-3.5 text-emerald-300 font-medium">Instant pass/fail verdicts on all quantitative assertions</td>
+                <td className="py-3.5 text-emerald-300 font-semibold">Instant pass/fail verdicts on all quantitative assertions</td>
               </tr>
             </tbody>
           </table>
@@ -632,7 +635,7 @@ export default function LandingPage() {
 
       {/* ── 5. Final CTA ────────────────────────────────────────────── */}
       <section className="p-8 sm:p-12 rounded-xl bg-surface border border-hairline text-center space-y-4 shadow-2">
-        <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
+        <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink font-display">
           Ready to inspect the live AML triage queue?
         </h2>
         <p className="text-sm text-ink-2 max-w-lg mx-auto leading-relaxed">
@@ -640,13 +643,13 @@ export default function LandingPage() {
         </p>
         <div className="pt-3 flex justify-center gap-3">
           <Link to="/queue">
-            <Button size="lg" variant="primary" className="gap-2 px-6 font-medium">
+            <Button size="lg" variant="primary" className="gap-2 px-6 font-semibold font-display shadow-sm">
               <span>Open Triage Queue</span>
               <ArrowRight size={15} />
             </Button>
           </Link>
           <Link to="/filings">
-            <Button size="lg" variant="secondary" className="px-6">
+            <Button size="lg" variant="secondary" className="px-6 font-medium">
               <span>View Sealed Filings Ledger</span>
             </Button>
           </Link>

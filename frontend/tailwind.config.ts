@@ -32,6 +32,7 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-ui)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'var(--font-ui)', 'sans-serif'],
         mono: ['var(--font-mono)', 'ui-monospace', 'monospace'],
         serif: ['Instrument Serif', 'Georgia', 'serif'],
       },

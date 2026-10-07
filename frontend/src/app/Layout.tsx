@@ -39,8 +39,8 @@ export function Layout() {
                 onClick={() => sound.playClick(800, 0.02)}
                 className="flex items-center gap-2.5 group select-none py-1" 
               >
-                <CairnquillLogo size={22} showText={false} />
-                <span className="font-semibold text-sm tracking-tight text-ink group-hover:text-white transition-colors">
+                <CairnquillLogo size={26} showText={false} />
+                <span className="font-semibold text-sm tracking-tight text-ink group-hover:text-white transition-colors font-display">
                   Cairnquill
                 </span>
               </Link>

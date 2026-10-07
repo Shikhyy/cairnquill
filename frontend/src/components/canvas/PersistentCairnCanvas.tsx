@@ -56,21 +56,21 @@ export function PersistentCairnCanvas() {
       { radius: 1.1, height: 1.3, segments: 5, y: 1.5, rotY: 2.4 },
     ]
 
-    // Custom Shaders for Obsidian Material with Subtle Specular Rim
+    // Custom Shaders for Obsidian Material with Iridescent Rim Lighting
     const customMaterial = new THREE.MeshPhysicalMaterial({
-      color: 0x141418,
-      roughness: 0.4,
-      metalness: 0.7,
-      clearcoat: 0.3,
-      clearcoatRoughness: 0.3,
-      reflectivity: 0.5,
+      color: 0x0d111a,
+      roughness: 0.25,
+      metalness: 0.85,
+      clearcoat: 0.65,
+      clearcoatRoughness: 0.2,
+      reflectivity: 0.85,
     })
 
     const wireframeMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: 0x38bdf8,
       wireframe: true,
       transparent: true,
-      opacity: 0.025,
+      opacity: 0.08,
     })
 
     const stoneMeshes: THREE.Mesh[] = []
@@ -85,7 +85,7 @@ export function PersistentCairnCanvas() {
         const vx = pos.getX(i)
         const vy = pos.getY(i)
         const vz = pos.getZ(i)
-        const jitter = 0.06
+        const jitter = 0.08
         pos.setXYZ(i, vx + (Math.sin(vy * 5 + i) * jitter), vy, vz + (Math.cos(vx * 5 + i) * jitter))
       }
       geom.computeVertexNormals()
@@ -102,7 +102,7 @@ export function PersistentCairnCanvas() {
     })
 
     // Ambient particles (Verifiable Claim Tokens floating subtly)
-    const particleCount = 60
+    const particleCount = 120
     const particleGeometry = new THREE.BufferGeometry()
     const particlePositions = new Float32Array(particleCount * 3)
 
@@ -115,27 +115,27 @@ export function PersistentCairnCanvas() {
     particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3))
 
     const particleMaterial = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.04,
+      color: 0x38bdf8,
+      size: 0.05,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.4,
       blending: THREE.AdditiveBlending,
     })
 
     const particleSystem = new THREE.Points(particleGeometry, particleMaterial)
     scene.add(particleSystem)
 
-    // Neutral Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5)
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.45)
     scene.add(ambientLight)
 
-    // Soft Directional Key Light
-    const keyLight = new THREE.DirectionalLight(0xffffff, 0.8)
+    // Directional Key Light (Cold Blue from Top Left)
+    const keyLight = new THREE.DirectionalLight(0x38bdf8, 2.2)
     keyLight.position.set(-8, 12, 10)
     scene.add(keyLight)
 
-    // Subtle Cool Rim Light
-    const rimLight = new THREE.DirectionalLight(0x38bdf8, 0.4)
+    // Subtle Rim Light (Emerald from Bottom Right)
+    const rimLight = new THREE.DirectionalLight(0x10b981, 1.4)
     rimLight.position.set(8, -6, -5)
     scene.add(rimLight)
 
@@ -182,7 +182,7 @@ export function PersistentCairnCanvas() {
       
       // Position shifts subtly based on page scroll
       cairnGroup.position.y = (scrollY * 0.003)
-      cairnGroup.position.x = 4.2 - (mouse.x * 0.5) // Positioned slightly on the right half
+      cairnGroup.position.x = 4.2 - (mouse.x * 0.5)
 
       // Individual stone micro-float (natural balance simulation)
       stoneMeshes.forEach((mesh, index) => {
@@ -222,7 +222,7 @@ export function PersistentCairnCanvas() {
   return (
     <div 
       ref={mountRef} 
-      className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-25" 
+      className="fixed inset-0 pointer-events-none z-0 overflow-hidden" 
       aria-hidden="true" 
     />
   )
