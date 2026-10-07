@@ -13,26 +13,14 @@ export function SoundToggle() {
   return (
     <button
       onClick={handleToggle}
-      data-magnetic="0.4"
-      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-hairline/60 bg-surface-2/60 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+      className="p-1.5 rounded-md text-ink-2 hover:text-ink hover:bg-white/[0.05] transition-colors border border-transparent hover:border-hairline flex items-center justify-center"
       title={muted ? 'Unmute procedural audio' : 'Mute procedural audio'}
       aria-label={muted ? 'Unmute audio' : 'Mute audio'}
     >
       {muted ? (
-        <>
-          <VolumeX size={13} className="text-zinc-500" />
-          <span className="hidden sm:inline text-[11px]">Audio Off</span>
-        </>
+        <VolumeX size={15} className="text-ink-faint" />
       ) : (
-        <>
-          <Volume2 size={13} className="text-cyan-400" />
-          <div className="flex items-end gap-0.5 h-3">
-            <span className="w-0.5 bg-cyan-400 rounded-full animate-pulse h-2" />
-            <span className="w-0.5 bg-cyan-400 rounded-full animate-pulse h-3" style={{ animationDelay: '0.15s' }} />
-            <span className="w-0.5 bg-cyan-400 rounded-full animate-pulse h-1.5" style={{ animationDelay: '0.3s' }} />
-          </div>
-          <span className="hidden sm:inline text-[11px] text-zinc-300">Live FX</span>
-        </>
+        <Volume2 size={15} className="text-ink-2" />
       )}
     </button>
   )
